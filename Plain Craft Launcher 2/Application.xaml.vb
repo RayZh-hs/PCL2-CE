@@ -29,6 +29,15 @@ Public Class Application
     Private Sub Application_Startup() '(sender As Object, e As StartupEventArgs) Handles Me.Startup
         Try
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance)
+            
+            '语言初始化
+            If String.IsNullOrEmpty(Config.Language) Then
+                ' TODO: Show language selection dialog
+                ' For now, default to zh-CN
+                Config.Language = "zh-CN"
+            End If
+            I18nService.Initialize()
+
             '创建自定义跟踪监听器，用于检测是否存在 Binding 失败
             PresentationTraceSources.DataBindingSource.Listeners.Add(New BindingErrorTraceListener())
             PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.Error

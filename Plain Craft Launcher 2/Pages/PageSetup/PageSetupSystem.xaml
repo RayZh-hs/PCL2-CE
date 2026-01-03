@@ -7,6 +7,21 @@
     PanScroll="{Binding ElementName=PanBack}">
     <local:MyScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" x:Name="PanBack">
         <StackPanel x:Name="PanMain" Margin="25,10">
+            <local:MyCard Margin="0,0,0,15" Title="常规 / General">
+                <StackPanel Margin="25,40,25,15">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="Name" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="语言 / Language" Margin="0,0,25,0" />
+                        <local:MyComboBox x:Name="ComboLanguage" Grid.Column="1" SelectionChanged="ComboLanguage_SelectionChanged">
+                            <local:MyComboBoxItem Content="简体中文" Tag="zh-CN" />
+                            <local:MyComboBoxItem Content="English" Tag="en-US" />
+                        </local:MyComboBox>
+                    </Grid>
+                </StackPanel>
+            </local:MyCard>
             <local:MyCard Margin="0,15" Title="下载">
                 <StackPanel Margin="25,37,25,15">
                     <Grid>

@@ -24,6 +24,14 @@ Class PageSetupSystem
     End Sub
     Public Sub Reload()
 
+        '语言
+        For Each item As MyComboBoxItem In ComboLanguage.Items
+            If item.Tag.ToString() = Config.Language Then
+                ComboLanguage.SelectedItem = item
+                Exit For
+            End If
+        Next
+
         '下载
         SliderDownloadThread.Value = Setup.Get("ToolDownloadThread")
         SliderDownloadSpeed.Value = Setup.Get("ToolDownloadSpeed")
@@ -197,6 +205,18 @@ Class PageSetupSystem
                     "一般选择 仅在有重要通知时显示公告 就可以让你尽量不受打扰了。" & vbCrLf &
                     "除非你在制作服务器整合包，或时常手动更新启动器，否则极度不推荐选择此项！", "警告", "我知道我在做什么", "取消", IsWarn:=True) = 2 Then
             ComboSystemActivity.SelectedItem = e.RemovedItems(0)
+        End If
+    End Sub
+
+    '语言切换
+    Private Sub ComboLanguage_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
+        If Not IsLoaded Then Return
+        Dim selected = CType(ComboLanguage.SelectedItem, MyComboBoxItem).Tag.ToString()
+        If Config.Language <> selected Then
+            Config.Language = selected
+            I18nService.LoadLanguage(selected)
+            ' 提示重启以应用更改
+            ' HintRestart() 
         End If
     End Sub
 
