@@ -216,7 +216,7 @@ Class PageSetupSystem
             Config.Language = selected
             I18nService.LoadLanguage(selected)
             ' 提示重启以应用更改
-            ' HintRestart() 
+            Hint(I18nService.Get("LanguageChangeNotification"), HintType.Info, False)
         End If
     End Sub
 

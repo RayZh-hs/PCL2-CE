@@ -32,11 +32,12 @@ Public Class Application
             
             '语言初始化
             If String.IsNullOrEmpty(Config.Language) Then
-                ' TODO: Show language selection dialog
-                ' For now, default to zh-CN
-                Config.Language = "zh-CN"
+                ' Show language selection dialog for first launch
+                Dim langDialog As New PageSelectLanguage()
+                langDialog.ShowDialog()
+            Else
+                I18nService.Initialize()
             End If
-            I18nService.Initialize()
 
             '创建自定义跟踪监听器，用于检测是否存在 Binding 失败
             PresentationTraceSources.DataBindingSource.Listeners.Add(New BindingErrorTraceListener())
@@ -165,6 +166,8 @@ WaitRetry:
             '执行测试
 #If DEBUGRESERVED Then
             Test()
+            ' Run I18n tests
+            PCL.Core.App.I18nServiceTest.RunTests()
 #End If
             AniControlEnabled += 1
         Catch ex As Exception
