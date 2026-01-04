@@ -19,7 +19,7 @@
                     <TextBlock Name="LabEmptyTitle" Margin="0,0,0,9" HorizontalAlignment="Center" Text="无可用实例" FontSize="19" UseLayoutRounding="True" SnapsToDevicePixels="True" Foreground="{DynamicResource ColorBrush3}" />
                     <Rectangle HorizontalAlignment="Stretch" Height="2" Fill="{DynamicResource ColorBrush3}" />
                     <TextBlock Name="LabEmptyContent" Margin="10,15,10,5" Text="未找到任何游戏实例，请先下载一个游戏实例。&#xa;若有已存在的实例，请在左边的列表中选择“添加文件夹”，选择 .minecraft 文件夹将其导入。" TextWrapping="Wrap" />
-                    <local:MyButton Height="35" HorizontalAlignment="Center" x:Name="BtnEmptyDownload" MinWidth="140" Text="下载游戏" Margin="0,10,0,0" Padding="13,0" ColorType="Highlight" />
+                    <local:MyButton Height="35" HorizontalAlignment="Center" x:Name="BtnEmptyDownload" MinWidth="140" Text="{local:Translate DownloadGame}" Margin="0,10,0,0" Padding="13,0" ColorType="Highlight" />
                 </StackPanel>
             </local:MyCard>
             <local:MyCard HorizontalAlignment="Center" VerticalAlignment="Center" Margin="40" x:Name="PanEmptySearch" UseAnimation="False" Grid.Row="1">

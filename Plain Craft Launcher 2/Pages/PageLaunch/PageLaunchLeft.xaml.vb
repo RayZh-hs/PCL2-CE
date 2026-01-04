@@ -1,5 +1,6 @@
 ﻿Imports PCL.Core.Utils
 Imports System.Windows
+Imports PCL.Core.App
 
 Public Class PageLaunchLeft
 
@@ -132,7 +133,7 @@ Public Class PageLaunchLeft
         '初始化页面
         LabLaunchingName.Text = McInstanceSelected.Name
         LabLaunchingStage.Text = "初始化"
-        LabLaunchingTitle.Text = If(CurrentLaunchOptions?.SaveBatch Is Nothing, "正在启动游戏", "正在导出启动脚本")
+        LabLaunchingTitle.Text = If(CurrentLaunchOptions?.SaveBatch Is Nothing, I18nService.Get("LaunchingGame"), I18nService.Get("ExportingLaunchScript"))
         LabLaunchingProgress.Text = "0.00 %"
         LabLaunchingProgress.Opacity = 1
         LabLaunchingDownload.Visibility = Visibility.Visible
@@ -288,7 +289,7 @@ Public Class PageLaunchLeft
                 BtnLaunch.IsEnabled = True
             Else
                 Type = PageType.Profile
-                If Not BtnLaunch.Text = "下载游戏" Then BtnLaunch.IsEnabled = False
+                If Not BtnLaunch.Text = I18nService.Get("DownloadGame") Then BtnLaunch.IsEnabled = False
             End If
         End If
         '刷新页面
@@ -445,13 +446,13 @@ Finish:
             FrmMain.BtnExtraApril.ShowRefresh()
         End If
         '实际的启动
-        If BtnLaunch.Text = "启动游戏" Then
+        If BtnLaunch.Text = I18nService.Get("LaunchGame") Then
             If File.Exists(McInstanceSelected.PathInstance + ".pclignore") Then
                 Hint("当前实例正在安装，无法启动！", HintType.Critical)
                 Exit Sub
             End If
             McLaunchStart()
-        ElseIf BtnLaunch.Text = "下载游戏" Then
+        ElseIf BtnLaunch.Text = I18nService.Get("DownloadGame") Then
             FrmMain.PageChange(FormMain.PageType.Download, FormMain.PageSubType.DownloadInstall)
         End If
     End Sub
@@ -482,28 +483,28 @@ Finish:
         Select Case CurrentState
             Case 0
                 Log("[Minecraft] 启动按钮：正在加载 Minecraft 实例")
-                FrmLaunchLeft.BtnLaunch.Text = "正在加载"
+                FrmLaunchLeft.BtnLaunch.Text = I18nService.Get("Loading")
                 FrmLaunchLeft.BtnLaunch.IsEnabled = False
-                FrmLaunchLeft.LabVersion.Text = "正在加载中，请稍候"
+                FrmLaunchLeft.LabVersion.Text = I18nService.Get("LoadingPleaseWait")
                 FrmLaunchLeft.BtnInstance.IsEnabled = False
                 FrmLaunchLeft.BtnMore.Visibility = Visibility.Collapsed
             Case 1
                 Log("[Minecraft] 启动按钮：无 Minecraft 实例，下载已禁用")
-                FrmLaunchLeft.BtnLaunch.Text = "启动游戏"
+                FrmLaunchLeft.BtnLaunch.Text = I18nService.Get("LaunchGame")
                 FrmLaunchLeft.BtnLaunch.IsEnabled = False
-                FrmLaunchLeft.LabVersion.Text = "未找到可用的游戏实例"
+                FrmLaunchLeft.LabVersion.Text = I18nService.Get("NoGameInstanceFound")
                 FrmLaunchLeft.BtnInstance.IsEnabled = True
                 FrmLaunchLeft.BtnMore.Visibility = Visibility.Collapsed
             Case 2
                 Log("[Minecraft] 启动按钮：无 Minecraft 实例，要求下载")
-                FrmLaunchLeft.BtnLaunch.Text = "下载游戏"
+                FrmLaunchLeft.BtnLaunch.Text = I18nService.Get("DownloadGame")
                 FrmLaunchLeft.BtnLaunch.IsEnabled = True
-                FrmLaunchLeft.LabVersion.Text = "未找到可用的游戏实例"
+                FrmLaunchLeft.LabVersion.Text = I18nService.Get("NoGameInstanceFound")
                 FrmLaunchLeft.BtnInstance.IsEnabled = True
                 FrmLaunchLeft.BtnMore.Visibility = Visibility.Collapsed
             Case 3
                 Log("[Minecraft] 启动按钮：Minecraft 实例：" & McInstanceSelected.PathInstance)
-                FrmLaunchLeft.BtnLaunch.Text = "启动游戏"
+                FrmLaunchLeft.BtnLaunch.Text = I18nService.Get("LaunchGame")
                 FrmLaunchLeft.BtnInstance.IsEnabled = True
                 If SelectedProfile IsNot Nothing Then
                     BtnLaunch.IsEnabled = True

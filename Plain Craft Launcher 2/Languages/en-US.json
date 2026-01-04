@@ -87,5 +87,14 @@
     "PclConfigFile": "PCL Configuration File",
     "SelectConfigFile": "Select configuration file",
     "ConfigurationImported": "Configuration imported successfully! Please restart PCL to apply configuration...",
-    "Restart": "Restart"
+        "Restart": "Restart",
+    "CreateAndSelectProfile": "Create and select a profile to launch game",
+    "DownloadGame": "Download Game",
+    "InstanceSelection": "Instance Selection",
+    "LaunchGame": "Launch Game",
+    "Loading": "Loading",
+    "LoadingPleaseWait": "Loading, please wait...",
+    "NoGameInstanceFound": "No available game instance found",
+    "LaunchingGame": "Launching game",
+    "ExportingLaunchScript": "Exporting launch script"
 }

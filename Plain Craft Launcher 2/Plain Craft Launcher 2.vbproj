@@ -112,4 +112,9 @@
     <Resource Include="Images\**" />
     <Resource Include="Resources\**" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Languages\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

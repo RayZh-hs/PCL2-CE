@@ -49,6 +49,12 @@
     <PackageReference Include="System.Text.Json" Version="10.0.1" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\Plain Craft Launcher 2\Languages\**">
+      <Link>Languages\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\PCL.Core\PCL.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
