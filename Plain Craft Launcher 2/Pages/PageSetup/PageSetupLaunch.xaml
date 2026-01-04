@@ -7,7 +7,7 @@
     PanScroll="{Binding ElementName=PanBack, Mode=OneWay}">
     <local:MyScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" x:Name="PanBack">
         <StackPanel x:Name="PanMain" Margin="25,25,25,10">
-            <local:MyCard x:Name="CardArgument" Margin="0,0,0,15" Title="启动选项">
+            <local:MyCard x:Name="CardArgument" Margin="0,0,0,15" Title="{local:Translate SetupLaunch.Title}">
                 <StackPanel Margin="25,40,25,15">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -35,19 +35,19 @@
                             <RowDefinition Height="28" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Text="默认版本隔离" Margin="0,0,25,0" />
+                        <TextBlock Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{local:Translate SetupLaunch.Indie}" Margin="0,0,25,0" />
                         <local:MyComboBox x:Name="ComboArgumentIndieV2" Grid.Row="0" Grid.ColumnSpan="2" Tag="LaunchArgumentIndieV2" Grid.Column="1"
-                                      ToolTip="当安装新实例时，据此自动设置新实例的隔离选项。&#xa;若想调整已有实例的隔离策略，请前往它的实例设置。">
-                            <local:MyComboBoxItem Content="关闭" ToolTip="所有实例均使用同一档案，存档、Mod、资源包等均为公用。&#xa;若存在多个安装了 Mod 的实例，可能会导致 Mod 冲突。" />
-                            <local:MyComboBoxItem Content="隔离可安装 Mod 的实例" IsSelected="True" ToolTip="可安装 Mod 的实例（例如 Forge、Fabric）均互相独立以避免 Mod 冲突，其他实例（例如原版）则不会被隔离。" />
-                            <local:MyComboBoxItem Content="隔离非正式版" ToolTip="将 Minecraft 快照、预发布版、远古版本、愚人节版本与其他实例进行隔离" />
-                            <local:MyComboBoxItem Content="隔离可安装 Mod 的实例与非正式版" />
-                            <local:MyComboBoxItem Content="隔离所有实例" ToolTip="不同实例之间的存档、Mod、资源包等均不互通。&#xa;这会导致不同原版实例间的存档不能共用，所以一般不推荐。" />
+                                      ToolTip="{local:Translate SetupLaunch.Indie.Tooltip}">
+                            <local:MyComboBoxItem Content="{local:Translate SetupLaunch.Indie.Off}" ToolTip="{local:Translate SetupLaunch.Indie.Off.Tooltip}" />
+                            <local:MyComboBoxItem Content="{local:Translate SetupLaunch.Indie.Mod}" IsSelected="True" ToolTip="{local:Translate SetupLaunch.Indie.Mod.Tooltip}" />
+                            <local:MyComboBoxItem Content="{local:Translate SetupLaunch.Indie.Snapshot}" ToolTip="{local:Translate SetupLaunch.Indie.Snapshot.Tooltip}" />
+                            <local:MyComboBoxItem Content="{local:Translate SetupLaunch.Indie.ModAndSnapshot}" />
+                            <local:MyComboBoxItem Content="{local:Translate SetupLaunch.Indie.All}" ToolTip="{local:Translate SetupLaunch.Indie.All.Tooltip}" />
                         </local:MyComboBox>
-                        <TextBlock Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Left" Text="游戏窗口标题" Margin="0,0,25,0" />
-                        <local:MyTextBox x:Name="TextArgumentTitle" Grid.Row="2" Grid.ColumnSpan="2" Tag="LaunchArgumentTitle" Grid.Column="1" ToolTip="自定义游戏窗口的标题，若留空则不进行更改。&#xa;支持以下替换标记：&#xa; · {user}：玩家名字&#xa; · {login}：玩家的登录方式&#xa; · {name}：游戏实例名&#xa; · {date}、{time}：当前的系统时间&#xa; · {version}：游戏对应的原版版本号" HintText="默认" MaxLength="100" />
-                        <TextBlock Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Left" Text="自定义信息" Margin="0,0,25,0" />
-                        <local:MyTextBox x:Name="TextArgumentInfo" Grid.Row="4" Grid.ColumnSpan="2" Tag="LaunchArgumentInfo" Text="PCL" Grid.Column="1" ToolTip="该信息会显示在游戏主界面的左下角，与 F3 调试页面的左上角">
+                        <TextBlock Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{local:Translate SetupLaunch.WindowTitle}" Margin="0,0,25,0" />
+                        <local:MyTextBox x:Name="TextArgumentTitle" Grid.Row="2" Grid.ColumnSpan="2" Tag="LaunchArgumentTitle" Grid.Column="1" ToolTip="{local:Translate SetupLaunch.WindowTitle.Tooltip}" HintText="{local:Translate SetupLaunch.Default}" MaxLength="100" />
+                        <TextBlock Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{local:Translate SetupLaunch.CustomInfo}" Margin="0,0,25,0" />
+                        <local:MyTextBox x:Name="TextArgumentInfo" Grid.Row="4" Grid.ColumnSpan="2" Tag="LaunchArgumentInfo" Text="PCL" Grid.Column="1" ToolTip="{local:Translate SetupLaunch.CustomInfo.Tooltip}">
                             <local:MyTextBox.ValidateRules>
                                 <local:ValidateExcept>
                                     <local:ValidateExcept.Excepts>
@@ -58,22 +58,22 @@
                                 </local:ValidateExcept>
                             </local:MyTextBox.ValidateRules>
                         </local:MyTextBox>
-                        <TextBlock VerticalAlignment="Center" Grid.Row="6" HorizontalAlignment="Left" Text="启动器可见性" Margin="0,0,25,0" />
+                        <TextBlock VerticalAlignment="Center" Grid.Row="6" HorizontalAlignment="Left" Text="{local:Translate SetupLaunch.LauncherVisibility}" Margin="0,0,25,0" />
                         <local:MyComboBox x:Name="ComboArgumentVisibie" Grid.Row="6" Grid.ColumnSpan="2" Tag="LaunchArgumentVisible" Grid.Column="1">
-                            <local:MyComboBoxItem Content="游戏启动后立即关闭" />
+                            <local:MyComboBoxItem Content="{local:Translate SetupLaunch.LauncherVisibility.Close}" />
                             <local:MyComboBoxItem Content="" IsEnabled="False" Visibility="Collapsed" />
-                            <local:MyComboBoxItem Content="游戏启动后隐藏，游戏退出后自动关闭" />
-                            <local:MyComboBoxItem Content="游戏启动后隐藏，游戏退出后重新打开" />
-                            <local:MyComboBoxItem Content="游戏启动后最小化" />
-                            <local:MyComboBoxItem Content="游戏启动后仍保持不变" IsSelected="True" />
+                            <local:MyComboBoxItem Content="{local:Translate SetupLaunch.LauncherVisibility.HideAndClose}" />
+                            <local:MyComboBoxItem Content="{local:Translate SetupLaunch.LauncherVisibility.HideAndReopen}" />
+                            <local:MyComboBoxItem Content="{local:Translate SetupLaunch.LauncherVisibility.Minimize}" />
+                            <local:MyComboBoxItem Content="{local:Translate SetupLaunch.LauncherVisibility.Keep}" IsSelected="True" />
                         </local:MyComboBox>
-                        <TextBlock VerticalAlignment="Center" Grid.Row="8" HorizontalAlignment="Left" Text="进程优先级" Margin="0,0,25,0" />
+                        <TextBlock VerticalAlignment="Center" Grid.Row="8" HorizontalAlignment="Left" Text="{local:Translate SetupLaunch.ProcessPriority}" Margin="0,0,25,0" />
                         <local:MyComboBox x:Name="ComboArgumentPriority" Grid.Row="8" Grid.ColumnSpan="2" Tag="LaunchArgumentPriority" Grid.Column="1">
-                            <local:MyComboBoxItem Content="高（优先保证游戏运行，游戏性能更佳，但可能造成其他程序卡顿）" />
-                            <local:MyComboBoxItem Content="中（平衡）" IsSelected="True" />
-                            <local:MyComboBoxItem Content="低（优先保证其他程序运行，但可能让游戏卡顿，适合挂机时使用）" />
+                            <local:MyComboBoxItem Content="{local:Translate SetupLaunch.ProcessPriority.High}" />
+                            <local:MyComboBoxItem Content="{local:Translate SetupLaunch.ProcessPriority.Normal}" IsSelected="True" />
+                            <local:MyComboBoxItem Content="{local:Translate SetupLaunch.ProcessPriority.Low}" />
                         </local:MyComboBox>
-                        <TextBlock VerticalAlignment="Center" Grid.Row="10" HorizontalAlignment="Left" Text="窗口大小" Margin="0,0,25,0" />
+                        <TextBlock VerticalAlignment="Center" Grid.Row="10" HorizontalAlignment="Left" Text="{local:Translate SetupLaunch.WindowSize}" Margin="0,0,25,0" />
                         <Grid x:Name="PanArgumentWindow" Grid.Row="10" Grid.ColumnSpan="2" Grid.Column="1">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
@@ -82,11 +82,11 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <local:MyComboBox x:Name="ComboArgumentWindowType" Tag="LaunchArgumentWindowType">
-                                <local:MyComboBoxItem Content="全屏" />
-                                <local:MyComboBoxItem Content="默认" IsSelected="True" />
-                                <local:MyComboBoxItem Content="与启动器尺寸一致" />
-                                <local:MyComboBoxItem Content="自定义尺寸" ToolTip="Forge 1.12.2 等个别版本存在 Bug，会导致高度设定无效" />
-                                <local:MyComboBoxItem Content="最大化" />
+                                <local:MyComboBoxItem Content="{local:Translate SetupLaunch.WindowSize.FullScreen}" />
+                                <local:MyComboBoxItem Content="{local:Translate SetupLaunch.Default}" IsSelected="True" />
+                                <local:MyComboBoxItem Content="{local:Translate SetupLaunch.WindowSize.MatchLauncher}" />
+                                <local:MyComboBoxItem Content="{local:Translate SetupLaunch.WindowSize.Custom}" ToolTip="{local:Translate SetupLaunch.WindowSize.Custom.Tooltip}" />
+                                <local:MyComboBoxItem Content="{local:Translate SetupLaunch.WindowSize.Maximized}" />
                             </local:MyComboBox>
                             <local:MyTextBox Padding="0,0,5,0" Visibility="Collapsed" Grid.Column="1" Margin="50,0,0,0" x:Name="TextArgumentWindowWidth" Tag="LaunchArgumentWindowWidth" Width="60" HorizontalContentAlignment="Center" Text="854">
                                 <local:MyTextBox.ValidateRules>
@@ -95,7 +95,7 @@
                             </local:MyTextBox>
                             <TextBlock x:Name="LabArgumentWindowMiddle" Visibility="Collapsed" Grid.Column="2" Text=" × " VerticalAlignment="Center" FontSize="18" />
                             <local:MyTextBox Padding="0,0,5,0" Visibility="Collapsed" Grid.Column="3" Width="60" HorizontalContentAlignment="Center" x:Name="TextArgumentWindowHeight" Tag="LaunchArgumentWindowHeight" Text="480"
-                                          ToolTip="Forge 1.12.2 等个别版本存在 Bug，会导致高度设定无效" ToolTipService.Placement="Right" ToolTipService.HorizontalOffset="5">
+                                          ToolTip="{local:Translate SetupLaunch.WindowSize.Custom.Tooltip}" ToolTipService.Placement="Right" ToolTipService.HorizontalOffset="5">
                                 <local:MyTextBox.ValidateRules>
                                     <local:ValidateInteger Min="1" Max="9999" />
                                 </local:MyTextBox.ValidateRules>

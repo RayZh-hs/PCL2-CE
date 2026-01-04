@@ -1,4 +1,6 @@
-﻿Public Class PageOtherHelpDetail
+﻿Imports PCL.Core.App
+
+Public Class PageOtherHelpDetail
     Implements IRefreshable
     Public Entry As HelpEntry
 
@@ -15,7 +17,7 @@
     ''' </summary>
     Public Function Init(Entry As HelpEntry) As Boolean
         Dim Content = If(Entry.XamlContent, "")
-        If Content = "" Then Throw New Exception("帮助 xaml 文件为空")
+        If Content = "" Then Throw New Exception(I18nService.Get("ToolsHelpDetail_XamlEmpty"))
         Try
             '修改时应同时修改 PageLaunchRight.LoadContent
             Content = HelpArgumentReplace(Content)
@@ -26,8 +28,8 @@
             PanCustom.Children.Add(GetObjectFromXML(Content))
             Return True
         Catch ex As Exception
-            Log("[System] 自定义信息内容：" & vbCrLf & Content)
-            Log(ex, "加载帮助 XAML 文件失败", LogLevel.Msgbox)
+            Log(I18nService.Get("ToolsHelpDetail_CustomInfo") & vbCrLf & Content)
+            Log(ex, I18nService.Get("ToolsHelpDetail_LoadXamlFailed"), LogLevel.Msgbox)
             Return False
         End Try
     End Function

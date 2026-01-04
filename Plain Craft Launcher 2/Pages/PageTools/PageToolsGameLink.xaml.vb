@@ -31,12 +31,12 @@ Public Class PageToolsGameLink
 
         If LobbyAnnouncementLoader Is Nothing Then
             Dim loaders As New List(Of LoaderBase)
-            loaders.Add(New LoaderTask(Of Integer, Integer)("大厅界面初始化", Sub() RunInUi(Sub()
+            loaders.Add(New LoaderTask(Of Integer, Integer)(I18nService.Get("ToolsGameLink_LobbyInterfaceInit"), Sub() RunInUi(Sub()
                                                                                          HintAnnounce.Visibility = Visibility.Visible
                                                                                          HintAnnounce.Theme = MyHint.Themes.Blue
-                                                                                         HintAnnounce.Text = "正在连接到大厅服务器..."
+                                                                                         HintAnnounce.Text = I18nService.Get("ToolsGameLink_ConnectingToLobby")
                                                                                      End Sub)))
-            loaders.Add(New LoaderTask(Of Integer, Integer)("大厅公告获取", AddressOf GetAnnouncement) With {.ProgressWeight = 0.5})
+            loaders.Add(New LoaderTask(Of Integer, Integer)(I18nService.Get("ToolsGameLink_FetchLobbyAnnouncement"), AddressOf GetAnnouncement) With {.ProgressWeight = 0.5})
             LobbyAnnouncementLoader = New LoaderCombo(Of Integer)("Lobby Announcement", loaders) With {.Show = False}
         End If
     End Sub
@@ -48,20 +48,20 @@ Public Class PageToolsGameLink
             Await LobbyService.LeaveLobbyAsync()
 
             RunInUi(Sub()
-                        CardPlayerList.Title = "大厅成员列表（正在获取信息）"
+                        CardPlayerList.Title = I18nService.Get("ToolsGameLink_LobbyMemberListFetching")
                         StackPlayerList.Children.Clear()
                         CurrentSubpage = Subpages.PanSelect
                     End Sub)
         Catch secEx As Exception
             Log(secEx, "Occured an exception when exit server.")
-            Hint("在服务器退出时发生了错误！", HintType.Critical)
+            Hint(I18nService.Get("ToolsGameLink_ServerErrorOnExit"), HintType.Critical)
         End Try
     End Sub
 
 
     Public Async Sub Reload() Handles Me.Loaded
         HintAnnounce.Visibility = Visibility.Visible
-        HintAnnounce.Text = "正在连接到大厅服务器..."
+        HintAnnounce.Text = I18nService.Get("ToolsGameLink_ConnectingToLobby")
         HintAnnounce.Theme = MyHint.Themes.Blue
 
         '加载公告
@@ -79,10 +79,10 @@ Public Class PageToolsGameLink
     End Sub
 
     Private Sub BtnEulaStop_Click(sender As Object, e As EventArgs) Handles BtnEulaStop.Click
-        If MyMsgBox("你确定要撤销联机协议授权吗？", "撤销授权确认", "确定", "取消", IsWarn:=True) = 1 Then
+        If MyMsgBox(I18nService.Get("ToolsGameLink_RevokeAuthConfirm"), I18nService.Get("ToolsGameLink_RevokeAuthTitle"), I18nService.Get("ToolsTest_Confirm"), I18nService.Get("ToolsTest_Cancel"), IsWarn:=True) = 1 Then
             Config.Link.NaidRefreshTokenConfig.Reset()
             Config.Link.LinkEulaConfig.Reset()
-            Hint("联机功能已停用！")
+            Hint(I18nService.Get("ToolsGameLink_OnlineDisabled"))
             CurrentSubpage = Subpages.PanEula
         End If
     End Sub
@@ -91,8 +91,8 @@ Public Class PageToolsGameLink
 
 #Region "加载步骤"
 
-    Private Shared WithEvents InitLoader As New LoaderCombo(Of Integer)("大厅初始化", {
-        New LoaderTask(Of Integer, Integer)("初始化", AddressOf InitTask) With {.ProgressWeight = 0.5}
+    Private Shared WithEvents InitLoader As New LoaderCombo(Of Integer)(I18nService.Get("ToolsGameLink_LobbyInit"), {
+        New LoaderTask(Of Integer, Integer)(I18nService.Get("ToolsGameLink_Init"), AddressOf InitTask) With {.ProgressWeight = 0.5}
     })
     Private Shared Async Sub InitTask(task As LoaderTask(Of Integer, Integer))
         Await LobbyService.InitializeAsync()
@@ -115,30 +115,30 @@ Public Class PageToolsGameLink
             Await LobbyService.LeaveLobbyAsync()
 
             RunInUi(Sub()
-                        CardPlayerList.Title = "大厅成员列表（正在获取信息）"
+                        CardPlayerList.Title = I18nService.Get("ToolsGameLink_LobbyMemberListFetching")
                         StackPlayerList.Children.Clear()
                         CurrentSubpage = Subpages.PanSelect
                     End Sub)
         Catch ex As Exception
             Log(ex, "Occured an exception when exit server.")
-            Hint("在服务器退出时发生了错误！", HintType.Critical)
+            Hint(I18nService.Get("ToolsGameLink_ServerErrorOnExit"), HintType.Critical)
         End Try
     End Sub
     Private Sub OnClientPingHandler(latency As Long)
         RunInUi(Sub()
-                    LabFinishQuality.Text = "已连接"
+                    LabFinishQuality.Text = I18nService.Get("ToolsGameLink_Connected")
                     LabFinishPing.Text = latency.ToString() + "ms"
-                    LabConnectType.Text = "暂不可用"
+                    LabConnectType.Text = I18nService.Get("ToolsGameLink_Unavailable")
                 End Sub)
     End Sub
 
     Private Sub OnUserStopGame()
         RunInUi(Sub()
-                    CardPlayerList.Title = "大厅成员列表（正在获取信息）"
+                    CardPlayerList.Title = I18nService.Get("ToolsGameLink_LobbyMemberListFetching")
                     StackPlayerList.Children.Clear()
                     CurrentSubpage = Subpages.PanSelect
                 End Sub)
-        MyMsgBox("由于你关闭了联机中的 MC 实例，大厅已自动解散。", "大厅已解散")
+        MyMsgBox(I18nService.Get("ToolsGameLink_LobbyDissolvedDetail"), I18nService.Get("ToolsGameLink_LobbyDissolved"))
     End Sub
 
     

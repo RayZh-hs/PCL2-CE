@@ -1,4 +1,6 @@
-﻿Public Class PageToolsHelp
+﻿Imports PCL.Core.App
+
+Public Class PageToolsHelp
     Implements IRefreshable
 
 #Region "初始化"
@@ -63,7 +65,7 @@
             Next
 
         Catch ex As Exception
-            Log(ex, "加载帮助列表 UI 失败", LogLevel.Feedback)
+            Log(ex, I18nService.Get("ToolsHelp_LoadUIFailed"), LogLevel.Feedback)
         End Try
     End Sub
 
@@ -78,7 +80,7 @@
                 EnterHelpPage(Entry)
             End If
         Catch ex As Exception
-            Log(ex, "处理帮助项目点击时发生意外错误", LogLevel.Feedback)
+            Log(ex, I18nService.Get("ToolsHelp_ItemClickError"), LogLevel.Feedback)
         End Try
     End Sub
     Public Shared Sub EnterHelpPage(Location As String)
@@ -92,7 +94,7 @@
                 If FrmHelpDetail.Init(Entry) Then
                     FrmMain.PageChange(New FormMain.PageStackData With {.Page = FormMain.PageType.HelpDetail, .Additional = {Entry, FrmHelpDetail}})
                 Else
-                    Log("[Help] 已取消进入帮助项目，这一般是由于 xaml 初始化失败，且用户在弹窗中手动放弃", LogLevel.Debug)
+                    Log("[Help] " + I18nService.Get("ToolsHelp_EnterItemCancelled"), LogLevel.Debug)
                 End If
             End Sub)
         End Sub)
@@ -107,7 +109,7 @@
                 If FrmHelpDetail.Init(Entry) Then
                     FrmMain.PageChange(New FormMain.PageStackData With {.Page = FormMain.PageType.HelpDetail, .Additional = {Entry, FrmHelpDetail}})
                 Else
-                    Log("[Help] 已取消进入帮助项目，这一般是由于 xaml 初始化失败，且用户在弹窗中手动放弃", LogLevel.Debug)
+                    Log("[Help] " + I18nService.Get("ToolsHelp_EnterItemCancelled"), LogLevel.Debug)
                 End If
             End Sub)
         End Sub)
@@ -118,7 +120,7 @@
         If FrmHelpDetail.Init(New HelpEntry(Location)) Then
             Return FrmHelpDetail
         Else
-            Throw New Exception("已取消进入帮助项目，这一般是由于 xaml 初始化失败，且用户在弹窗中手动放弃")
+            Throw New Exception(I18nService.Get("ToolsHelp_EnterItemCancelled"))
         End If
     End Function
 
@@ -158,13 +160,13 @@
             Dim SearchResult = Search(QueryList, SearchBox.Text, MaxBlurCount:=5, MinBlurSimilarity:=0.08)
             PanSearchList.Children.Clear()
             If Not SearchResult.Any() Then
-                PanSearch.Title = "无搜索结果"
+                PanSearch.Title = I18nService.Get("ToolsHelp_NoSearchResults")
                 PanSearchList.Visibility = Visibility.Collapsed
             Else
-                PanSearch.Title = "搜索结果"
+                PanSearch.Title = I18nService.Get("ToolsHelp_SearchResults")
                 For Each Result In SearchResult
                     Dim Item = Result.Item.ToListItem
-                    If ModeDebug Then Item.Info = If(Result.AbsoluteRight, "完全匹配，", "") & "相似度：" & Math.Round(Result.Similarity, 3) & "，" & Item.Info
+                    If ModeDebug Then Item.Info = If(Result.AbsoluteRight, I18nService.Get("ToolsHelp_ExactMatch"), "") & I18nService.Get("ToolsHelp_Similarity") & Math.Round(Result.Similarity, 3) & I18nService.Get("ToolsHelp_Comma") & Item.Info
                     PanSearchList.Children.Add(Item)
                 Next
                 PanSearchList.Visibility = Visibility.Visible

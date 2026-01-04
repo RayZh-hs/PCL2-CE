@@ -28,23 +28,23 @@ Public Class PageSetupUpdate
                 If(IsArm64System, UpdateArch.arm64, UpdateArch.x64),
                 SemVer.Parse(VersionBaseName),
                 VersionCode) Then
-                Log("[Update] 已是最新版本")
+                Log("[Update] " + I18nService.Get("SetupUpdate_Latest"))
                 Return UpdateStatus.Latest
             Else 
-                Log("[Update] 有可用的新版本")
+                Log("[Update] " + I18nService.Get("SetupUpdate_Available"))
                 Return UpdateStatus.Available
             End If
         Catch ex As Exception
-            Log(ex, "无法获取最新版本信息，请检查网络连接", LogLevel.Hint)
+            Log(ex, I18nService.Get("SetupUpdate_CheckFailed"), LogLevel.Hint)
             Return UpdateStatus.Error
         End Try
     End Function
     
     Public Async Sub CheckUpdate() Handles BtnCheckAgain.Click
-        Log("[Update] 开始检查更新")
+        Log("[Update] " + I18nService.Get("SetupUpdate_StartCheck"))
         CardUpdate.Visibility = Visibility.Collapsed
         CardCheck.Visibility = Visibility.Visible
-        TextCurrentDesc.Text = "正在检查更新..."
+        TextCurrentDesc.Text = I18nService.Get("SetupUpdate_Checking")
         BtnCheckAgain.IsEnabled = False
         Select Case Await IsLatestAsync()
             Case UpdateStatus.Available

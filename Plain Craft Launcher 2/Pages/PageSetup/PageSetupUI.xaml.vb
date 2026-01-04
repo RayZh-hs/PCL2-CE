@@ -15,7 +15,8 @@ Public Class PageSetupUI
         InitializeComponent()
         '还是石山控件，不支持 ItemsSource Binding，虽然龙猫确实就没考虑 MVVM
         '或者说，支持了一半（内容用了原生的 ComboBoxItem 而不是自定义的 MyComboBoxItem）
-        For Each color In ThemeColors
+        Dim colors = {I18nService.Get("SetupUI.Color.Sky"), I18nService.Get("SetupUI.Color.Totoro"), I18nService.Get("SetupUI.Color.BSOD")}
+        For Each color In colors
             ComboLightColor.Items.Add(New MyComboBoxItem With {.Content = color})
             ComboDarkColor.Items.Add(New MyComboBoxItem With {.Content = color})
         Next
@@ -27,15 +28,65 @@ Public Class PageSetupUI
         PanBack.ScrollToHome()
         ThemeCheckAll(True)
 
+        LabLauncherOpacity.Text = I18nService.Get("SetupUI.Opacity")
+        LabLauncherHue.Text = I18nService.Get("SetupUI.Hue")
+        LabLauncherDelta.Text = I18nService.Get("SetupUI.HueGradient")
+        LabLauncherSat.Text = I18nService.Get("SetupUI.Saturation")
+        LabLauncherLight.Text = I18nService.Get("SetupUI.Brightness")
+        LabLauncherTheme.Text = I18nService.Get("SetupUI.Theme")
+        LabLauncherHiddenTheme.Text = I18nService.Get("SetupUI.HiddenTheme")
+
+        RadioLauncherTheme0.Text = I18nService.Get("SetupUI.Theme.Blue")
+        RadioLauncherTheme1.Text = I18nService.Get("SetupUI.Theme.Green")
+        RadioLauncherTheme2.Text = I18nService.Get("SetupUI.Theme.Grass")
+        RadioLauncherTheme3.Text = I18nService.Get("SetupUI.Theme.Yellow")
+        RadioLauncherTheme4.Text = I18nService.Get("SetupUI.Theme.Brown")
+        RadioLauncherTheme5.Text = I18nService.Get("SetupUI.Theme.Black")
+        RadioLauncherTheme5.ToolTip = I18nService.Get("SetupUI.Theme.GrayLie")
+        RadioLauncherTheme5Gray.Text = I18nService.Get("SetupUI.Theme.Unknown")
+        LabLauncherTheme5Unlock.ToolTip = I18nService.Get("SetupUI.Theme.GrayLie")
+
+        RadioLauncherTheme12.Text = I18nService.Get("SetupUI.Theme.Unknown")
+        RadioLauncherTheme12.ToolTip = I18nService.Get("SetupUI.Theme.Funny")
+
+        RadioLauncherTheme6.Text = I18nService.Get("SetupUI.Theme.Unknown")
+        RadioLauncherTheme6.ToolTip = I18nService.Get("SetupUI.Theme.Reunion")
+
+        RadioLauncherTheme7.Text = I18nService.Get("SetupUI.Theme.Unknown")
+
+        RadioLauncherTheme13.Text = I18nService.Get("SetupUI.Theme.Unknown")
+        RadioLauncherTheme13.ToolTip = I18nService.Get("SetupUI.Theme.Lucky")
+
+        RadioLauncherTheme8.Text = I18nService.Get("SetupUI.Theme.Unknown")
+        RadioLauncherTheme9.Text = I18nService.Get("SetupUI.Theme.Unknown")
+
+        RadioLauncherTheme10.Text = I18nService.Get("SetupUI.Theme.Unknown")
+        RadioLauncherTheme10.ToolTip = I18nService.Get("SetupUI.Theme.Login")
+
+        RadioLauncherTheme11.Text = I18nService.Get("SetupUI.Theme.Unknown")
+        RadioLauncherTheme11.ToolTip = I18nService.Get("SetupUI.Theme.Puzzle")
+
+        RadioLauncherTheme14.Text = I18nService.Get("SetupUI.Theme.Custom")
+        RadioLauncherTheme14.ToolTip = I18nService.Get("SetupUI.Theme.Unlock")
+
+        LabSnapshotHint.Text = I18nService.Get("SetupUI.Snapshot.Hint")
+        BtnLauncherDonate.Text = I18nService.Get("SetupUI.Snapshot.Get")
+
+        ComboDarkMode.Items(0).Content = I18nService.Get("SetupUI.Mode.Light")
+        ComboDarkMode.Items(1).Content = I18nService.Get("SetupUI.Mode.Dark")
+        ComboDarkMode.Items(2).Content = I18nService.Get("SetupUI.Mode.System")
+
+        LabLightScheme.Text = I18nService.Get("SetupUI.LightScheme")
+
         If ThemeDontClick <> 0 Then
             Dim NewText As String
             Select Case ThemeDontClick
                 Case 1
-                    NewText = "眼瞎白"
+                    NewText = I18nService.Get("SetupUI.Theme.White")
                 Case 2
-                    NewText = "真·滑稽彩"
+                    NewText = I18nService.Get("SetupUI.Theme.FunnyColor")
                 Case Else
-                    NewText = "？？？"
+                    NewText = I18nService.Get("SetupUI.Theme.Unknown")
             End Select
             For Each Control In PanLauncherTheme.Children
                 If (TypeOf Control Is MyRadioBox) AndAlso CType(Control, MyRadioBox).IsEnabled Then

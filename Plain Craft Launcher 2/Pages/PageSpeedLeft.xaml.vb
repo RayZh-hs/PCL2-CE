@@ -1,5 +1,7 @@
 ﻿
 
+Imports PCL.Core.App
+
 Public Class PageSpeedLeft
     Private Const WatcherInterval As Integer = 300
 
@@ -57,7 +59,7 @@ Public Class PageSpeedLeft
 #End Region
 
         Catch ex As Exception
-            Log(ex, "任务管理左栏监视出错", LogLevel.Feedback)
+            Log(ex, I18nService.Get("SpeedLeft_LeftColumnError"), LogLevel.Feedback)
         End Try
         If FrmSpeedRight Is Nothing OrElse FrmSpeedRight.PanMain Is Nothing Then Return
         Try
@@ -65,7 +67,7 @@ Public Class PageSpeedLeft
                 TaskRefresh(Loader)
             Next
         Catch ex As Exception
-            Log(ex, "任务管理右栏监视出错", LogLevel.Feedback)
+            Log(ex, I18nService.Get("SpeedLeft_RightColumnError"), LogLevel.Feedback)
         End Try
     End Sub
     Public Sub TaskRefresh(Loader As LoaderBase)
@@ -91,12 +93,12 @@ Public Class PageSpeedLeft
                             Card.RowDefinitions.Clear()
                             Card.Children.Clear()
                             Card.Children.Add(GetObjectFromXML("<Path xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"" Stretch=""Uniform"" Tag=""Failed"" Data=""F1 M2.5,0 L0,2.5 7.5,10 0,17.5 2.5,20 10,12.5 17.5,20 20,17.5 12.5,10 20,2.5 17.5,0 10,7.5 2.5,0Z"" Height=""15"" Width=""15"" HorizontalAlignment=""Center"" Grid.Column=""0"" Grid.Row=""0"" Fill=""{DynamicResource ColorBrush3}"" Margin=""0,1,0,0"" VerticalAlignment=""Top""/>"))
-                            Dim Tb As TextBlock = GetObjectFromXML("<TextBlock xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"" TextWrapping=""Wrap"" HorizontalAlignment=""Left"" ToolTip=""单击复制错误详情"" Grid.Column=""1"" Grid.Row=""0"" Margin=""0,0,0,5"" />")
+                            Dim Tb As TextBlock = GetObjectFromXML("<TextBlock xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"" TextWrapping=""Wrap"" HorizontalAlignment=""Left"" ToolTip=""" & I18nService.Get("SpeedLeft_ClickToCopy") & """ Grid.Column=""1"" Grid.Row=""0"" Margin=""0,0,0,5"" />")
                             Tb.Text = Loader.Error.ToString()
                             AddHandler Tb.MouseLeftButtonDown,
                             Sub(sender As TextBlock, e As EventArgs)
                                 ClipboardSet(sender.Text, False)
-                                Hint("已复制错误详情！", HintType.Finish)
+                                Hint(I18nService.Get("SpeedLeft_ErrorCopied"), HintType.Finish)
                             End Sub
                             Card.Children.Add(Tb)
 #End Region
@@ -140,7 +142,7 @@ Public Class PageSpeedLeft
 #End Region
                     End Select
                 Catch ex As Exception
-                    Log(ex, "更新任务管理显示失败（" & Loader.State.ToString & "）", LogLevel.Feedback)
+                    Log(ex, I18nService.Get("SpeedLeft_UpdateDisplayFailed") & Loader.State.ToString & "）", LogLevel.Feedback)
                 End Try
             ElseIf Not (Loader.State = LoadState.Aborted OrElse Loader.State = LoadState.Finished) Then
                 Try
@@ -179,7 +181,7 @@ Public Class PageSpeedLeft
                     Try
                         Card = GetObjectFromXML(CardXAML)
                     Catch ex As Exception
-                        Log(ex, "新建任务管理卡片失败")
+                        Log(ex, I18nService.Get("SpeedLeft_CreateCardFailed"))
                         Log("出错的卡片内容：" & vbCrLf & CardXAML)
                         Throw
                     End Try
@@ -205,11 +207,11 @@ Public Class PageSpeedLeft
                     End If
 #End Region
                 Catch ex As Exception
-                    Log(ex, "添加任务管理卡片失败", LogLevel.Feedback)
+                    Log(ex, I18nService.Get("SpeedLeft_AddCardFailed"), LogLevel.Feedback)
                 End Try
             End If
         Catch ex As Exception
-            Log(ex, "刷新任务管理显示失败", LogLevel.Feedback)
+            Log(ex, I18nService.Get("SpeedLeft_RefreshDisplayFailed"), LogLevel.Feedback)
         End Try
     End Sub
     Public Sub TaskRemove(Loader As Object)

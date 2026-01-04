@@ -1,4 +1,6 @@
-﻿Public Class PageToolsLeft
+﻿Imports PCL.Core.App
+
+Public Class PageToolsLeft
 
     Private IsLoad As Boolean = False
     Private IsPageSwitched As Boolean = False '如果在 Loaded 前切换到其他页面，会导致触发 Loaded 时再次切换一次
@@ -45,7 +47,7 @@
                 If FrmToolsHelp Is Nothing Then FrmToolsHelp = New PageToolsHelp
                 Return FrmToolsHelp
             Case Else
-                Throw New Exception("未知的更多子页面种类：" & ID)
+                Throw New Exception(I18nService.Get("ToolsLeft_UnknownPageType") & ID)
         End Select
     End Function
 
@@ -60,7 +62,7 @@
             PageChangeRun(PageGet(ID))
             PageID = ID
         Catch ex As Exception
-            Log(ex, "切换分页面失败（ID " & ID & "）", LogLevel.Feedback)
+            Log(ex, I18nService.Get("ToolsLeft_SwitchPageFailed") & ID & I18nService.Get("ToolsLeft_CloseParen"), LogLevel.Feedback)
         Finally
             AniControlEnabled -= 1
         End Try

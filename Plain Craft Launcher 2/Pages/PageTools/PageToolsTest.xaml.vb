@@ -63,13 +63,13 @@ Public Class PageToolsTest
         Try
             Select Case Loader.State
                 Case LoadState.Finished
-                    Hint(Loader.Name + "完成！", ModMain.HintType.Finish, True)
+                    Hint(Loader.Name + I18nService.Get("ToolsTest_Finished"), ModMain.HintType.Finish, True)
                     Beep()
                 Case LoadState.Failed
-                    Log(Loader.Error, Loader.Name + "失败", ModBase.LogLevel.Msgbox, "出现错误")
+                    Log(Loader.Error, Loader.Name + I18nService.Get("ToolsTest_Failed"), ModBase.LogLevel.Msgbox, I18nService.Get("ToolsTest_ErrorOccurred"))
                     Beep()
                 Case LoadState.Aborted
-                    Hint(Loader.Name + "已取消！", ModMain.HintType.Info, True)
+                    Hint(Loader.Name + I18nService.Get("ToolsTest_Cancelled"), ModMain.HintType.Info, True)
             End Select
         Catch ex As Exception
         End Try
@@ -79,7 +79,7 @@ Public Class PageToolsTest
 
         Try
             If String.IsNullOrWhiteSpace(Folder) Then
-                Folder = SystemDialogs.SelectSaveFile("选择文件保存位置", FileName, Nothing, Nothing)
+                Folder = SystemDialogs.SelectSaveFile(I18nService.Get("ToolsTest_SelectSaveLocation"), FileName, Nothing, Nothing)
                 If Not Folder.Contains("\") Then
                     Return
                 End If
@@ -92,26 +92,26 @@ Public Class PageToolsTest
                 Directory.CreateDirectory(Folder)
                 CheckPermissionWithException(Folder)
             Catch ex As Exception
-                Log(ex, "访问文件夹失败（" + Folder + "）", ModBase.LogLevel.Hint, "出现错误")
+                Log(ex, I18nService.Get("ToolsTest_AccessFolderFailed") + Folder + "）", ModBase.LogLevel.Hint, I18nService.Get("ToolsTest_ErrorOccurred"))
                 Return
             End Try
-            Log("[Download] 自定义下载文件名：" + FileName, LogLevel.Normal, "出现错误")
-            Log("[Download] 自定义下载文件目标：" + Folder, ModBase.LogLevel.Normal, "出现错误")
+            Log("[Download] " + I18nService.Get("ToolsTest_CustomDownloadFilename") + FileName, LogLevel.Normal, I18nService.Get("ToolsTest_ErrorOccurred"))
+            Log("[Download] " + I18nService.Get("ToolsTest_CustomDownloadTarget") + Folder, ModBase.LogLevel.Normal, I18nService.Get("ToolsTest_ErrorOccurred"))
             Dim uuid As Integer = GetUuid()
             Dim loaderdownload As LoaderBase
             If String.IsNullOrEmpty(New ValidateHttp().Validate(Url)) Then
-                loaderdownload = New LoaderDownload("自定义下载文件：" + FileName + " ", New List(Of NetFile)() From {New NetFile(New String() {Url}, Folder + FileName, Nothing, True, UserAgent)})
+                loaderdownload = New LoaderDownload(I18nService.Get("ToolsTest_CustomDownloadFile") + FileName + " ", New List(Of NetFile)() From {New NetFile(New String() {Url}, Folder + FileName, Nothing, True, UserAgent)})
             Else 'UNC 路径
-                loaderdownload = New LoaderDownloadUnc("自定义下载文件：" + FileName + " ", New Tuple(Of String, String)(Url, Folder + FileName))
+                loaderdownload = New LoaderDownloadUnc(I18nService.Get("ToolsTest_CustomDownloadFile") + FileName + " ", New Tuple(Of String, String)(Url, Folder + FileName))
             End If
-            Dim loaderCombo As New LoaderCombo(Of Integer)("自定义下载 (" + uuid.ToString() + ") ", New LoaderBase() {loaderDownload}) With {.OnStateChanged = AddressOf DownloadState}
+            Dim loaderCombo As New LoaderCombo(Of Integer)(I18nService.Get("ToolsTest_CustomDownload") + uuid.ToString() + ") ", New LoaderBase() {loaderDownload}) With {.OnStateChanged = AddressOf DownloadState}
             loaderCombo.Start()
             LoaderTaskbarAdd(Of Integer)(loaderCombo)
             FrmMain.BtnExtraDownload.ShowRefresh()
             FrmMain.BtnExtraDownload.Ribble()
 
         Catch ex As Exception
-            Log(ex, "开始自定义下载失败", LogLevel.Feedback, "出现错误")
+            Log(ex, I18nService.Get("ToolsTest_StartCustomDownloadFailed"), LogLevel.Feedback, I18nService.Get("ToolsTest_ErrorOccurred"))
         End Try
     End Sub
 
@@ -120,12 +120,12 @@ Public Class PageToolsTest
         Dim luckValue = random.Next(0, 101)
         Dim rating = GetRating(luckValue)
         Dim currentDate = DateTime.Now.ToString("yyyy/MM/dd")
-        Dim title = $"今日人品 - {currentDate}"
+        Dim title = $"{I18nService.Get("ToolsTest_TodaysLuck")}{currentDate}"
 
         If (luckValue >= 60) Then
-            MyMsgBox($"你今天的人品值是：{luckValue}！{rating}", title)
+            MyMsgBox($"{I18nService.Get("ToolsTest_LuckValue")}{luckValue}！{rating}", title)
         Else
-            MyMsgBox($"你今天的人品值是：{luckValue}... {rating}", title, IsWarn:=luckValue <= 30)
+            MyMsgBox($"{I18nService.Get("ToolsTest_LuckValue")}{luckValue}... {rating}", title, IsWarn:=luckValue <= 30)
         End If
 
     End Sub
@@ -142,7 +142,7 @@ Public Class PageToolsTest
                     ' 只有当没有运行中的Minecraft游戏且启动器不在加载状态时才能清理
                     If Not HasRunningMinecraft AndAlso McLaunchLoader.State <> LoadState.Loading Then
                         If HasDownloadingTask() Then
-                            Hint("请在所有下载任务完成后再来清理吧……")
+                            Hint(I18nService.Get("ToolsTest_CleanAfterDownload"))
                             Return
                         End If
                         If Not McFolderList.Any() Then
@@ -151,12 +151,12 @@ Public Class PageToolsTest
                         Log(String.Format("[Test] 当前缓存文件夹：{0}，默认缓存文件夹：{1}", PathTemp, IO.Path.Combine(IO.Path.GetTempPath(), "PCL")))
                         If String.Compare(PathTemp, IO.Path.Combine(IO.Path.GetTempPath(), "PCL")) = 0 Then
                             If Setup.Get("HintClearRubbish") <= 2 Then
-                                If MyMsgBox("即将清理游戏日志、错误报告、缓存等文件。" & vbCrLf & "虽然应该没人往这些地方放重要文件，但还是问一下，是否确认继续？" & vbCrLf & vbCrLf & "在完成清理后，PCL 将自动重启。", "清理确认", "确定", "取消") = 2 Then
+                                If MyMsgBox(I18nService.Get("ToolsTest_CleanConfirmation") & vbCrLf & I18nService.Get("ToolsTest_CleanConfirmationDetail") & vbCrLf & vbCrLf & I18nService.Get("ToolsTest_RestartAfterClean"), I18nService.Get("ToolsTest_CleanConfirmTitle"), I18nService.Get("ToolsTest_Confirm"), I18nService.Get("ToolsTest_Cancel")) = 2 Then
                                     Return
                                 End If
                                 Setup.Set("HintClearRubbish", Setup.Get("HintClearRubbish") + 1)
                             End If
-                        ElseIf MyMsgBox("即将清理游戏日志、错误报告、缓存等文件。" & vbCrLf & vbCrLf & "你已将缓存文件夹手动修改为：" + PathTemp + vbCrLf & "清理过程中，将删除该文件夹中的所有内容，且无法恢复。请确认其中没有除了 PCL 缓存以外的重要文件！" & vbCrLf & vbCrLf & "在完成清理后，PCL 将自动重启。", "清理确认", "确定", "取消") = 2 Then
+                        ElseIf MyMsgBox(I18nService.Get("ToolsTest_CleanConfirmation") & vbCrLf & vbCrLf & I18nService.Get("ToolsTest_ManualCacheFolder") + PathTemp + vbCrLf & I18nService.Get("ToolsTest_CleanWarning") & vbCrLf & vbCrLf & I18nService.Get("ToolsTest_RestartAfterClean"), I18nService.Get("ToolsTest_CleanConfirmTitle"), I18nService.Get("ToolsTest_Confirm"), I18nService.Get("ToolsTest_Cancel")) = 2 Then
                             Return
                         End If
 
