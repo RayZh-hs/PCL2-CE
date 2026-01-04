@@ -1,7 +1,9 @@
+Imports System.Collections.Generic
 Imports System.IO
 Imports PCL.Core.App
 Imports PCL.Core.Utils
 Imports PCL.Core.Utils.OS
+Imports System.Windows.Threading
 
 Public Class Application
 
@@ -32,9 +34,9 @@ Public Class Application
             
             '语言初始化
             If String.IsNullOrEmpty(Config.Language) Then
-                ' Show language selection dialog for first launch
-                Dim langDialog As New PageSelectLanguage()
-                langDialog.ShowDialog()
+                Config.Language = "en-US"
+                I18nService.Initialize()
+                Lifecycle.When(LifecycleState.WindowCreated, AddressOf ShowLanguageSelection)
             Else
                 I18nService.Initialize()
             End If
@@ -233,5 +235,31 @@ WaitRetry:
             Log($"警告，检测到 Binding 失败：{message}")
         End Sub
     End Class
+
+    Private Sub ShowLanguageSelection()
+        ' Wait for window to be visible
+        If FrmMain Is Nothing OrElse FrmMain.PanMsg Is Nothing OrElse FrmMain.Opacity <= 0 Then
+            Dim timer As New DispatcherTimer()
+            timer.Interval = TimeSpan.FromMilliseconds(100)
+            AddHandler timer.Tick, Sub(s, e)
+                                       timer.Stop()
+                                       ShowLanguageSelection()
+                                   End Sub
+            timer.Start()
+            Return
+        End If
+
+        Dim selections As New List(Of IMyRadio) From {
+            New MyListItem With {.Title = "English", .SnapsToDevicePixels = True},
+            New MyListItem With {.Title = "简体中文", .SnapsToDevicePixels = True}
+        }
+        Dim result = MyMsgBoxSelect(selections, "Language / 语言", "OK", "", False)
+        If result.HasValue Then
+            If result.Value = 1 Then
+                Config.Language = "zh-CN"
+                I18nService.LoadLanguage("zh-CN")
+            End If
+        End If
+    End Sub
 
 End Class
