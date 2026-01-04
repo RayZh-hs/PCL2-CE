@@ -22,7 +22,7 @@ Public Class PageSelectLanguage
         I18nService.Initialize()
         
         ' Update UI text with translations
-        TitleTextBlock.Text = I18nService.Get("LanguageSelectionTitle")
+        Me.Title = I18nService.Get("LanguageSelectionTitle")
         PromptTextBlock.Text = I18nService.Get("LanguageSelectionPrompt")
         NoteTextBlock.Text = I18nService.Get("LanguageSelectionNote")
     End Sub
