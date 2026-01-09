@@ -625,5 +625,9 @@
     "Download.VersionList.ReleasedOn": "released on {0}",
     "Download.VersionList.ReleasedOnShort": "Released on {0}",
     "Download.VersionList.AllVersions": "All Versions ({0})",
-    "Download.VersionList.ViewAll": "View all versions"
+    "Download.VersionList.ViewAll": "View all versions",
+    "Download.VersionList.Type.Official": "Official",
+    "Download.VersionList.Type.NoForge": "Forge Incompatible",
+    "Download.VersionList.Type.CompatibleForge": "Forge {0} Compatible",
+    "Download.VersionList.ViewAllVersions": "View All Versions"
 }

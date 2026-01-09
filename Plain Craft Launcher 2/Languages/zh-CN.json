@@ -628,5 +628,6 @@
     "Download.VersionList.ReleasedOn": "发布于 {0}",
     "Download.VersionList.ReleasedOnShort": "发布于 {0}",
     "Download.VersionList.AllVersions": "所有版本 ({0})",
-    "Download.VersionList.ViewAll": "查看所有版本"
+    "Download.VersionList.ViewAll": "查看所有版本",
+    "Download.ModLoader.Tag.Snapshot": "快照版本"
 }
