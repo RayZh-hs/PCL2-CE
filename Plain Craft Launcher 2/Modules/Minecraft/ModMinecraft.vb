@@ -1222,29 +1222,29 @@ ExitDataLoad:
         If name.StartsWithF("2.0") OrElse name.StartsWithF("2point0") Then
             Dim tag = ""
             If name.EndsWith("red") Then
-                tag = PCL.Core.App.I18nService.Get("Global.Fool.2.0.Red")
+                tag = PCL.Core.App.I18nService.Get("Download.VersionList.Fool.2.0.Red")
             ElseIf name.EndsWith("blue") Then
-                tag = PCL.Core.App.I18nService.Get("Global.Fool.2.0.Blue")
+                tag = PCL.Core.App.I18nService.Get("Download.VersionList.Fool.2.0.Blue")
             ElseIf name.EndsWith("purple") Then
-                tag = PCL.Core.App.I18nService.Get("Global.Fool.2.0.Purple")
+                tag = PCL.Core.App.I18nService.Get("Download.VersionList.Fool.2.0.Purple")
             End If
-            Return PCL.Core.App.I18nService.Get("Global.Fool.2.0") & tag
+            Return PCL.Core.App.I18nService.Get("Download.VersionList.Fool.2.0") & tag
         ElseIf name = "15w14a" Then
-            Return PCL.Core.App.I18nService.Get("Global.Fool.15w14a")
+            Return PCL.Core.App.I18nService.Get("Download.VersionList.Fool.15w14a")
         ElseIf name = "1.rv-pre1" Then
-            Return PCL.Core.App.I18nService.Get("Global.Fool.1.rv-pre1")
+            Return PCL.Core.App.I18nService.Get("Download.VersionList.Fool.1.rv-pre1")
         ElseIf name = "3d shareware v1.34" Then
-            Return PCL.Core.App.I18nService.Get("Global.Fool.3dShareware")
+            Return PCL.Core.App.I18nService.Get("Download.VersionList.Fool.3dShareware")
         ElseIf name.StartsWithF("20w14inf") OrElse name = "20w14∞" Then
-            Return PCL.Core.App.I18nService.Get("Global.Fool.20w14infinite")
+            Return PCL.Core.App.I18nService.Get("Download.VersionList.Fool.20w14infinite")
         ElseIf name = "22w13oneblockatatime" Then
-             Return PCL.Core.App.I18nService.Get("Global.Fool.22w13oneblockatatime")
+             Return PCL.Core.App.I18nService.Get("Download.VersionList.Fool.22w13oneblockatatime")
         ElseIf name = "23w13a_or_b" Then
-             Return PCL.Core.App.I18nService.Get("Global.Fool.23w13a_or_b")
+             Return PCL.Core.App.I18nService.Get("Download.VersionList.Fool.23w13a_or_b")
         ElseIf name = "24w14potato" Then
-             Return PCL.Core.App.I18nService.Get("Global.Fool.24w14potato")
+             Return PCL.Core.App.I18nService.Get("Download.VersionList.Fool.24w14potato")
         ElseIf name = "25w14craftmine" Then
-             Return PCL.Core.App.I18nService.Get("Global.Fool.25w14craftmine")
+             Return PCL.Core.App.I18nService.Get("Download.VersionList.Fool.25w14craftmine")
         Else
             Return ""
         End If

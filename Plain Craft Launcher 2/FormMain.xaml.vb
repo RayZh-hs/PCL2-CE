@@ -116,10 +116,10 @@ Public Class FormMain
     End Sub
 
     Private Sub FormMain_Loaded() '(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
-        BtnTitleSelect0.Text = I18nService.Get("TitleLaunch")
-        BtnTitleSelect1.Text = I18nService.Get("TitleDownload")
-        BtnTitleSelect2.Text = I18nService.Get("TitleSetup")
-        BtnTitleSelect3.Text = I18nService.Get("TitleTools")
+        BtnTitleSelect0.Text = I18nService.Get("Title.Launch")
+        BtnTitleSelect1.Text = I18nService.Get("Title.Download")
+        BtnTitleSelect2.Text = I18nService.Get("Title.Setup")
+        BtnTitleSelect3.Text = I18nService.Get("Title.Tools")
         ApplicationStartTick = TimeUtils.GetTimeTick()
         FrmHandle = New WindowInteropHelper(Me).Handle
         '读取设置
