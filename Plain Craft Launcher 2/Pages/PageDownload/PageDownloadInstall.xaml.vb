@@ -269,7 +269,7 @@ Public Class PageDownloadInstall
         If SelectedOptiFine Is Nothing Then
             BtnOptiFineClear.Visibility = Visibility.Collapsed
             ImgOptiFine.Visibility = Visibility.Collapsed
-            LabOptiFine.Text = If(OptiFineError, "可以添加")
+            LabOptiFine.Text = If(OptiFineError, PCL.Core.App.I18nService.Get("Download.VersionList.CanAdd"))
             LabOptiFine.Foreground = ColorGray4
         Else
             BtnOptiFineClear.Visibility = Visibility.Visible

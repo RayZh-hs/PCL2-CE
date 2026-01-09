@@ -811,9 +811,9 @@ Retry:
         '建立控件
         Dim NewItem As New MyListItem With {
             .Title = Entry.DisplayName, .SnapsToDevicePixels = True, .Height = 42, .Type = MyListItem.CheckType.Clickable, .Tag = Entry,
-            .Info = If(Entry.IsPreview, "测试版", "正式版") &
-                    If(Entry.ReleaseTime = "", "", "，发布于 " & Entry.ReleaseTime) &
-                    If(Entry.RequiredForgeVersion Is Nothing, "，不兼容 Forge", If(Entry.RequiredForgeVersion = "", "", "，兼容 Forge " & Entry.RequiredForgeVersion)),
+            .Info = If(Entry.IsPreview, PCL.Core.App.I18nService.Get("Download.ModLoader.Tag.Beta"), PCL.Core.App.I18nService.Get("Download.VersionList.Type.Official")) &
+                    If(Entry.ReleaseTime = "", "", "，" & PCL.Core.App.I18nService.Fill("Download.VersionList.ReleasedOn", Entry.ReleaseTime)) &
+                    If(Entry.RequiredForgeVersion Is Nothing, "，" & PCL.Core.App.I18nService.Get("Download.VersionList.Type.NoForge"), If(Entry.RequiredForgeVersion = "", "", "，" & PCL.Core.App.I18nService.Fill("Download.VersionList.Type.CompatibleForge", Entry.RequiredForgeVersion))),
             .Logo = PathImage & "Blocks/GrassPath.png"
         }
         AddHandler NewItem.Click, OnClick
@@ -1024,7 +1024,7 @@ Retry:
         '建立控件
         Dim NewItem As New MyListItem With {
             .Title = Entry.Inherit, .SnapsToDevicePixels = True, .Height = 42, .Type = MyListItem.CheckType.Clickable, .Tag = Entry,
-            .Info = If(Entry.IsPreview, "测试版", "稳定版") & If(Entry.ReleaseTime = "", "", "，发布于 " & Entry.ReleaseTime),
+            .Info = If(Entry.IsPreview, PCL.Core.App.I18nService.Get("Download.ModLoader.Tag.Beta"), PCL.Core.App.I18nService.Get("Download.VersionList.Type.Stable")) & If(Entry.ReleaseTime = "", "", "，" & PCL.Core.App.I18nService.Fill("Download.VersionList.ReleasedOn", Entry.ReleaseTime)),
             .Logo = PathImage & "Blocks/Egg.png"
         }
         AddHandler NewItem.Click, OnClick
@@ -1041,7 +1041,7 @@ Retry:
         If sender.Tag.IsLegacy Then
             sender.Buttons = {}
         Else
-            Dim BtnList As New MyIconButton With {.Logo = Logo.IconButtonList, .ToolTip = "查看全部版本", .Tag = sender}
+            Dim BtnList As New MyIconButton With {.Logo = Logo.IconButtonList, .ToolTip = PCL.Core.App.I18nService.Get("Download.VersionList.ViewAllVersions"), .Tag = sender}
             ToolTipService.SetPlacement(BtnList, Primitives.PlacementMode.Center)
             ToolTipService.SetVerticalOffset(BtnList, 30)
             ToolTipService.SetHorizontalOffset(BtnList, 2)
@@ -1058,7 +1058,7 @@ Retry:
         If sender.Tag.IsLegacy Then
             sender.Buttons = {BtnSave}
         Else
-            Dim BtnList As New MyIconButton With {.Logo = Logo.IconButtonList, .ToolTip = "查看全部版本", .Tag = sender}
+            Dim BtnList As New MyIconButton With {.Logo = Logo.IconButtonList, .ToolTip = PCL.Core.App.I18nService.Get("Download.VersionList.ViewAllVersions"), .Tag = sender}
             ToolTipService.SetPlacement(BtnList, Primitives.PlacementMode.Center)
             ToolTipService.SetVerticalOffset(BtnList, 30)
             ToolTipService.SetHorizontalOffset(BtnList, 2)
@@ -1624,22 +1624,22 @@ Retry:
         '显示各个版本
         If RecommendedVersion IsNot Nothing Then
             Dim Recommended = ForgeDownloadListItem(RecommendedVersion, OnClick, IsSaveOnly)
-            Recommended.Info = "推荐版" & If(Recommended.Info = "", "", "，" & Recommended.Info)
+            Recommended.Info = PCL.Core.App.I18nService.Get("Download.VersionList.Recommended") & If(Recommended.Info = "", "", "，" & Recommended.Info)
             Stack.Children.Add(Recommended)
         End If
         If FreshVersion IsNot Nothing Then
             Dim Fresh = ForgeDownloadListItem(FreshVersion, OnClick, IsSaveOnly)
-            Fresh.Info = "最新版" & If(Fresh.Info = "", "", "，" & Fresh.Info)
+            Fresh.Info = PCL.Core.App.I18nService.Get("Download.VersionList.Latest") & If(Fresh.Info = "", "", "，" & Fresh.Info)
             Stack.Children.Add(Fresh)
         End If
         '添加间隔
-        Stack.Children.Add(New TextBlock With {.Text = "全部版本 (" & Entries.Count & ")", .HorizontalAlignment = HorizontalAlignment.Left, .Margin = New Thickness(6, 13, 0, 4)})
+        Stack.Children.Add(New TextBlock With {.Text = PCL.Core.App.I18nService.Fill("Download.VersionList.AllVersions", Entries.Count), .HorizontalAlignment = HorizontalAlignment.Left, .Margin = New Thickness(6, 13, 0, 4)})
     End Sub
     Public Function ForgeDownloadListItem(Entry As DlForgeVersionEntry, OnClick As MyListItem.ClickEventHandler, IsSaveOnly As Boolean) As MyListItem
         '建立控件
         Dim NewItem As New MyListItem With {
             .Title = Entry.VersionName, .SnapsToDevicePixels = True, .Height = 42, .Type = MyListItem.CheckType.Clickable, .Tag = Entry,
-            .Info = {If(Entry.ReleaseTime = "", "", "发布于 " & Entry.ReleaseTime), If(ModeDebug, "种类：" & Entry.Category, "")}.
+            .Info = {If(Entry.ReleaseTime = "", "", PCL.Core.App.I18nService.Fill("Download.VersionList.ReleasedOnShort", Entry.ReleaseTime)), If(ModeDebug, PCL.Core.App.I18nService.Fill("Download.VersionList.Category", Entry.Category), "")}.
                 Where(Function(d) d <> "").Join("，"),
             .Logo = PathImage & "Blocks/Anvil.png"
         }
@@ -1779,22 +1779,22 @@ Retry:
         '显示各个版本
         If FreshStableVersion IsNot Nothing Then
             Dim Fresh = NeoForgeDownloadListItem(FreshStableVersion, OnClick, IsSaveOnly)
-            Fresh.Info = If(Fresh.Info = "", "最新稳定版", "最新" & Fresh.Info)
+            Fresh.Info = If(Fresh.Info = "", PCL.Core.App.I18nService.Get("Download.VersionList.LatestStable"), PCL.Core.App.I18nService.Get("Download.VersionList.Prefix.Latest") & Fresh.Info)
             Stack.Children.Add(Fresh)
         End If
         If FreshBetaVersion IsNot Nothing Then
             Dim Fresh = NeoForgeDownloadListItem(FreshBetaVersion, OnClick, IsSaveOnly)
-            Fresh.Info = If(Fresh.Info = "", "最新测试版", "最新" & Fresh.Info)
+            Fresh.Info = If(Fresh.Info = "", PCL.Core.App.I18nService.Get("Download.VersionList.LatestBeta"), PCL.Core.App.I18nService.Get("Download.VersionList.Prefix.Latest") & Fresh.Info)
             Stack.Children.Add(Fresh)
         End If
         '添加间隔
-        Stack.Children.Add(New TextBlock With {.Text = "全部版本 (" & Entries.Count & ")", .HorizontalAlignment = HorizontalAlignment.Left, .Margin = New Thickness(6, 13, 0, 4)})
+        Stack.Children.Add(New TextBlock With {.Text = PCL.Core.App.I18nService.Fill("Download.VersionList.AllVersions", Entries.Count), .HorizontalAlignment = HorizontalAlignment.Left, .Margin = New Thickness(6, 13, 0, 4)})
     End Sub
     Public Function NeoForgeDownloadListItem(Info As DlNeoForgeListEntry, OnClick As MyListItem.ClickEventHandler, IsSaveOnly As Boolean) As MyListItem
         '建立控件
         Dim NewItem As New MyListItem With {
             .Title = Info.VersionName, .SnapsToDevicePixels = True, .Height = 42, .Type = MyListItem.CheckType.Clickable, .Tag = Info,
-            .Info = If(Info.IsBeta, "测试版", "稳定版"),
+            .Info = If(Info.IsBeta, PCL.Core.App.I18nService.Get("Download.ModLoader.Tag.Beta"), PCL.Core.App.I18nService.Get("Download.VersionList.Type.Stable")),
             .Logo = PathImage & "Blocks/NeoForge.png"
         }
         AddHandler NewItem.Click, OnClick
@@ -1867,22 +1867,22 @@ Retry:
         '显示各个版本
         'If FreshStableVersion IsNot Nothing Then
         '    Dim Fresh = NeoForgeDownloadListItem(FreshStableVersion, OnClick, IsSaveOnly)
-        '    Fresh.Info = If(Fresh.Info = "", "最新稳定版", "最新" & Fresh.Info)
+        '    Fresh.Info = If(Fresh.Info = "", PCL.Core.App.I18nService.Get("Download.VersionList.LatestStable"), PCL.Core.App.I18nService.Get("Download.VersionList.Prefix.Latest") & Fresh.Info)
         '    Stack.Children.Add(Fresh)
         'End If
         If FreshBetaVersion IsNot Nothing Then
             Dim Fresh = CleanroomDownloadListItem(FreshBetaVersion, OnClick, IsSaveOnly)
-            Fresh.Info = If(Fresh.Info = "", "最新测试版", "最新" & Fresh.Info)
+            Fresh.Info = If(Fresh.Info = "", PCL.Core.App.I18nService.Get("Download.VersionList.LatestBeta"), PCL.Core.App.I18nService.Get("Download.VersionList.Prefix.Latest") & Fresh.Info)
             Stack.Children.Add(Fresh)
         End If
         '添加间隔
-        Stack.Children.Add(New TextBlock With {.Text = "全部版本 (" & Entries.Count & ")", .HorizontalAlignment = HorizontalAlignment.Left, .Margin = New Thickness(6, 13, 0, 4)})
+        Stack.Children.Add(New TextBlock With {.Text = PCL.Core.App.I18nService.Fill("Download.VersionList.AllVersions", Entries.Count), .HorizontalAlignment = HorizontalAlignment.Left, .Margin = New Thickness(6, 13, 0, 4)})
     End Sub
     Public Function CleanroomDownloadListItem(Info As DlCleanroomListEntry, OnClick As MyListItem.ClickEventHandler, IsSaveOnly As Boolean) As MyListItem
         '建立控件
         Dim NewItem As New MyListItem With {
             .Title = Info.VersionName, .SnapsToDevicePixels = True, .Height = 42, .Type = MyListItem.CheckType.Clickable, .Tag = Info,
-            .Info = If(Info.IsBeta, "测试版", "稳定版"),
+            .Info = If(Info.IsBeta, PCL.Core.App.I18nService.Get("Download.ModLoader.Tag.Beta"), PCL.Core.App.I18nService.Get("Download.VersionList.Type.Stable")),
             .Logo = PathImage & "Blocks/Cleanroom.png"
         }
         AddHandler NewItem.Click, OnClick
@@ -2098,7 +2098,7 @@ Retry:
         '建立控件
         Dim NewItem As New MyListItem With {
             .Title = Entry("version").ToString.Replace("+build", ""), .SnapsToDevicePixels = True, .Height = 42, .Type = MyListItem.CheckType.Clickable, .Tag = Entry,
-            .Info = If(Entry("stable").ToObject(Of Boolean), "稳定版", "测试版"),
+            .Info = If(Entry("stable").ToObject(Of Boolean), PCL.Core.App.I18nService.Fill("Download.ModLoader.Tag.Stable"), PCL.Core.App.I18nService.Fill("Download.ModLoader.Tag.Stable")),
             .Logo = PathImage & "Blocks/Fabric.png"
         }
         AddHandler NewItem.Click, OnClick
@@ -2121,7 +2121,7 @@ Retry:
         '建立控件
         Dim NewItem As New MyListItem With {
             .Title = Entry.DisplayName.Split("]")(1).Replace("Fabric API ", "").Replace(" build ", ".").BeforeFirst("+").Trim, .SnapsToDevicePixels = True, .Height = 42, .Type = MyListItem.CheckType.Clickable, .Tag = Entry,
-            .Info = Entry.StatusDescription & "，发布于 " & Entry.ReleaseDate.ToString("yyyy'/'MM'/'dd HH':'mm"),
+            .Info = Entry.StatusDescription & "，" & PCL.Core.App.I18nService.Fill("Download.VersionList.ReleasedOn", Entry.ReleaseDate.ToString("yyyy'/'MM'/'dd HH':'mm")),
             .Logo = PathImage & "Blocks/Fabric.png"
         }
         AddHandler NewItem.Click, OnClick
@@ -2132,7 +2132,7 @@ Retry:
         '建立控件
         Dim NewItem As New MyListItem With {
             .Title = Entry.DisplayName.ToLower.Replace("optifabric-", "").Replace(".jar", "").Trim.TrimStart("v"), .SnapsToDevicePixels = True, .Height = 42, .Type = MyListItem.CheckType.Clickable, .Tag = Entry,
-            .Info = Entry.StatusDescription & "，发布于 " & Entry.ReleaseDate.ToString("yyyy'/'MM'/'dd HH':'mm"),
+            .Info = Entry.StatusDescription & "，" & PCL.Core.App.I18nService.Fill("Download.VersionList.ReleasedOn", Entry.ReleaseDate.ToString("yyyy'/'MM'/'dd HH':'mm")),
             .Logo = PathImage & "Blocks/OptiFabric.png"
         }
         AddHandler NewItem.Click, OnClick
@@ -2148,7 +2148,7 @@ Retry:
         '建立控件
         Dim NewItem As New MyListItem With {
             .Title = Entry("version").ToString, .SnapsToDevicePixels = True, .Height = 42, .Type = MyListItem.CheckType.Clickable, .Tag = Entry,
-            .Info = If(Entry("stable").ToObject(Of Boolean), "稳定版", "测试版"),
+            .Info = If(Entry("stable").ToObject(Of Boolean), PCL.Core.App.I18nService.Get("Download.VersionList.Type.Stable"), PCL.Core.App.I18nService.Get("Download.ModLoader.Tag.Beta")),
             .Logo = PathImage & "Blocks/Fabric.png"
         }
         AddHandler NewItem.Click, OnClick
@@ -2159,7 +2159,7 @@ Retry:
         '建立控件
         Dim NewItem As New MyListItem With {
             .Title = Entry.DisplayName.Replace("Legacy Fabric API ", ""), .SnapsToDevicePixels = True, .Height = 42, .Type = MyListItem.CheckType.Clickable, .Tag = Entry,
-            .Info = Entry.StatusDescription & "，发布于 " & Entry.ReleaseDate.ToString("yyyy'/'MM'/'dd HH':'mm"),
+            .Info = Entry.StatusDescription & "，" & PCL.Core.App.I18nService.Fill("Download.VersionList.ReleasedOn", Entry.ReleaseDate.ToString("yyyy'/'MM'/'dd HH':'mm")),
             .Logo = PathImage & "Blocks/Fabric.png"
         }
         AddHandler NewItem.Click, OnClick
@@ -2253,7 +2253,10 @@ Retry:
         '建立控件
         Dim NewItem As New MyListItem With {
             .Title = Entry("version").ToString, .SnapsToDevicePixels = True, .Height = 42, .Type = MyListItem.CheckType.Clickable, .Tag = Entry,
-            .Info = If(Entry("maven").ToString.Contains("installer"), "安装器", If(Entry("version").ToString.Contains("beta") OrElse Entry("version").ToString.Contains("pre"), "测试版", "稳定版")),
+            .Info = If(Entry("maven").ToString.Contains("installer"), "安装器", If(Entry("version").ToString.Contains("beta") OrElse Entry("version").ToString.Contains("pre"), 
+                PCL.Core.App.I18nService.Fill("Download.ModLoader.Tag.Beta"),
+                PCL.Core.App.I18nService.Fill("Download.ModLoader.Tag.Stable")
+            )),
             .Logo = PathImage & "Blocks/Quilt.png"
         }
         AddHandler NewItem.Click, OnClick
@@ -2445,8 +2448,13 @@ Retry:
     Public Function LabyModDownloadListItem(Entry As JObject, OnClick As MyListItem.ClickEventHandler) As MyListItem
         '建立控件
         Dim NewItem As New MyListItem With {
-            .Title = Entry("version").ToString & If(Entry("channel").ToString.Contains("snapshot"), " 快照版", " 稳定版"), .SnapsToDevicePixels = True, .Height = 42, .Type = MyListItem.CheckType.Clickable, .Tag = Entry,
-            .Info = If(Entry("channel").ToString.Contains("snapshot"), "快照版", "稳定版"),
+            .Title = Entry("version").ToString & " " & If(Entry("channel").ToString.Contains("snapshot"),
+                PCL.Core.App.I18nService.Fill("Download.ModLoader.Tag.Snapshot"),
+                PCL.Core.App.I18nService.Fill("Download.ModLoader.Tag.Stable")),
+            .SnapsToDevicePixels = True, .Height = 42, .Type = MyListItem.CheckType.Clickable, .Tag = Entry,
+            .Info = If(Entry("channel").ToString.Contains("snapshot"),
+                PCL.Core.App.I18nService.Fill("Download.ModLoader.Tag.Snapshot"),
+                PCL.Core.App.I18nService.Fill("Download.ModLoader.Tag.Stable")),
             .Logo = PathImage & "Blocks/LabyMod.png"
         }
         AddHandler NewItem.Click, OnClick
