@@ -1,4 +1,6 @@
-﻿Public Class PageDownloadForge
+﻿Imports PCL.Core.App
+
+Public Class PageDownloadForge
 
     Private Sub LoaderInit() Handles Me.Initialized
         PageLoaderInit(Load, PanLoad, PanMain, CardTip, DlForgeListLoader, AddressOf Load_OnFinish)
@@ -20,7 +22,7 @@
                 NewCard.Children.Add(NewStack)
                 NewCard.SwapControl = NewStack
                 NewCard.InstallMethod = Sub(Stack As StackPanel)
-                                            Dim LoadingPickaxe As New MyLoading With {.Text = "正在获取版本列表", .Margin = New Thickness(5)}
+                                            Dim LoadingPickaxe As New MyLoading With {.Text = I18nService.Get("Download.VersionList.Loading"), .Margin = New Thickness(5)}
                                             Dim Loader = New LoaderTask(Of String, List(Of DlForgeVersionEntry))("DlForgeVersion Main", AddressOf DlForgeVersionMain)
                                             LoadingPickaxe.State = Loader
                                             Loader.Start(Stack.Tag)

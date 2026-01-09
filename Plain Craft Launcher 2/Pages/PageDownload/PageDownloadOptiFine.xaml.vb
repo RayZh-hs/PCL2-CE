@@ -1,4 +1,6 @@
-﻿Public Class PageDownloadOptiFine
+﻿Imports PCL.Core.App
+
+Public Class PageDownloadOptiFine
 
     Private Sub LoaderInit() Handles Me.Initialized
         PageLoaderInit(Load, PanLoad, PanMain, CardTip, DlOptiFineListLoader, AddressOf Load_OnFinish)
@@ -12,7 +14,8 @@
         Try
             '归类
             Dim Dict As New Dictionary(Of String, List(Of DlOptiFineListEntry))
-            Dict.Add("快照版本", New List(Of DlOptiFineListEntry))
+            Dim SnapshotTitle As String = I18nService.Get("Download.OptiFine.Snapshot")
+            Dict.Add(SnapshotTitle, New List(Of DlOptiFineListEntry))
             For VersionCode As Integer = 50 To 0 Step -1
                 Dict.Add("1." & VersionCode, New List(Of DlOptiFineListEntry))
             Next
@@ -22,10 +25,10 @@
                     If Dict.ContainsKey(MainVersion) Then
                         Dict(MainVersion).Add(Version)
                     Else
-                        Dict("快照版本").Add(Version)
+                        Dict(SnapshotTitle).Add(Version)
                     End If
                 Else
-                    Dict("快照版本").Add(Version)
+                    Dict(SnapshotTitle).Add(Version)
                 End If
             Next
             '清空当前

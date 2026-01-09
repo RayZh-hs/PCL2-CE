@@ -1,4 +1,6 @@
-﻿Public Class PageDownloadQuilt
+﻿Imports PCL.Core.App
+
+Public Class PageDownloadQuilt
 
     Private Sub LoaderInit() Handles Me.Initialized
         PageLoaderInit(Load, PanLoad, CardVersions, CardTip, DlQuiltListLoader, AddressOf Load_OnFinish)
@@ -15,9 +17,9 @@
             For Each Version In Versions
                 PanVersions.Children.Add(QuiltDownloadListItem(Version, AddressOf Quilt_Selected))
             Next
-            CardVersions.Title = "版本列表 (" & Versions.Count & ")"
+            CardVersions.Title = I18nService.Get("Download.VersionList") & " (" & Versions.Count & ")"
         Catch ex As Exception
-            Log(ex, "可视化 Quilt 版本列表出错", LogLevel.Feedback)
+            Log(ex, I18nService.Get("Download.Quilt.VersionListError"), LogLevel.Feedback)
         End Try
     End Sub
 

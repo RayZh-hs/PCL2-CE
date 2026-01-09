@@ -1,4 +1,6 @@
-﻿Public Class PageDownloadFabric
+﻿Imports PCL.Core.App
+
+Public Class PageDownloadFabric
 
     Private Sub LoaderInit() Handles Me.Initialized
         PageLoaderInit(Load, PanLoad, CardVersions, CardTip, DlFabricListLoader, AddressOf Load_OnFinish)
@@ -15,9 +17,9 @@
             For Each Version In Versions
                 PanVersions.Children.Add(FabricDownloadListItem(Version, AddressOf Fabric_Selected))
             Next
-            CardVersions.Title = "版本列表 (" & Versions.Count & ")"
+            CardVersions.Title = I18nService.Get("Download.VersionList") & " (" & Versions.Count & ")"
         Catch ex As Exception
-            Log(ex, "可视化 Fabric 版本列表出错", LogLevel.Feedback)
+            Log(ex, I18nService.Get("Download.Fabric.VersionListError"), LogLevel.Feedback)
         End Try
     End Sub
 

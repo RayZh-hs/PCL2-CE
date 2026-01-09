@@ -1,4 +1,6 @@
-﻿Public Class PageDownloadLiteLoader
+﻿Imports PCL.Core.App
+
+Public Class PageDownloadLiteLoader
 
     Private Sub LoaderInit() Handles Me.Initialized
         PageLoaderInit(Load, PanLoad, PanMain, CardTip, DlLiteLoaderListLoader, AddressOf Load_OnFinish)
@@ -15,13 +17,14 @@
             For VersionCode As Integer = 30 To 0 Step -1
                 Dict.Add("1." & VersionCode, New List(Of DlLiteLoaderListEntry))
             Next
-            Dict.Add("未知版本", New List(Of DlLiteLoaderListEntry))
+            Dim UnknownTitle As String = I18nService.Get("Download.LiteLoader.UnknownVersion")
+            Dict.Add(UnknownTitle, New List(Of DlLiteLoaderListEntry))
             For Each Version As DlLiteLoaderListEntry In DlLiteLoaderListLoader.Output.Value
                 Dim MainVersion As String = "1." & Version.Inherit.Split(".")(1)
                 If Dict.ContainsKey(MainVersion) Then
                     Dict(MainVersion).Add(Version)
                 Else
-                    Dict("未知版本").Add(Version)
+                    Dict(UnknownTitle).Add(Version)
                 End If
             Next
             '清空当前
