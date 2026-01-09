@@ -308,7 +308,7 @@ Public Class PageInstanceInstall
             If SelectedLiteLoader Is Nothing Then
                 BtnLiteLoaderClear.Visibility = Visibility.Collapsed
                 ImgLiteLoader.Visibility = Visibility.Collapsed
-                LabLiteLoader.Text = If(LiteLoaderError, "可以添加")
+                LabLiteLoader.Text = If(LiteLoaderError, PCL.Core.App.I18nService.Get("Download.VersionList.CanAdd"))
                 LabLiteLoader.Foreground = ColorGray4
             Else
                 BtnLiteLoaderClear.Visibility = Visibility.Visible
@@ -329,7 +329,7 @@ Public Class PageInstanceInstall
             If SelectedForge Is Nothing Then
                 BtnForgeClear.Visibility = Visibility.Collapsed
                 ImgForge.Visibility = Visibility.Collapsed
-                LabForge.Text = If(forgeError, "可以添加")
+                LabForge.Text = If(forgeError, PCL.Core.App.I18nService.Get("Download.VersionList.CanAdd"))
                 LabForge.Foreground = ColorGray4
             Else
                 BtnForgeClear.Visibility = Visibility.Visible
@@ -348,7 +348,7 @@ Public Class PageInstanceInstall
             If SelectedCleanroom Is Nothing Then
                 BtnCleanroomClear.Visibility = Visibility.Collapsed
                 ImgCleanroom.Visibility = Visibility.Collapsed
-                LabCleanroom.Text = If(cleanroomError, "可以添加")
+                LabCleanroom.Text = If(cleanroomError, PCL.Core.App.I18nService.Get("Download.VersionList.CanAdd"))
                 LabCleanroom.Foreground = ColorGray4
             Else
                 BtnCleanroomClear.Visibility = Visibility.Visible
@@ -371,7 +371,7 @@ Public Class PageInstanceInstall
             If SelectedNeoForge Is Nothing Then
                 BtnNeoForgeClear.Visibility = Visibility.Collapsed
                 ImgNeoForge.Visibility = Visibility.Collapsed
-                LabNeoForge.Text = If(neoForgeError, "可以添加")
+                LabNeoForge.Text = If(neoForgeError, PCL.Core.App.I18nService.Get("Download.VersionList.CanAdd"))
                 LabNeoForge.Foreground = ColorGray4
             Else
                 BtnNeoForgeClear.Visibility = Visibility.Visible
@@ -392,7 +392,7 @@ Public Class PageInstanceInstall
             If SelectedFabric Is Nothing Then
                 BtnFabricClear.Visibility = Visibility.Collapsed
                 ImgFabric.Visibility = Visibility.Collapsed
-                LabFabric.Text = If(fabricError, "可以添加")
+                LabFabric.Text = If(fabricError, PCL.Core.App.I18nService.Get("Download.VersionList.CanAdd"))
                 LabFabric.Foreground = ColorGray4
             Else
                 BtnFabricClear.Visibility = Visibility.Visible
@@ -413,7 +413,7 @@ Public Class PageInstanceInstall
             If SelectedFabricApi Is Nothing Then
                 BtnFabricApiClear.Visibility = Visibility.Collapsed
                 ImgFabricApi.Visibility = Visibility.Collapsed
-                LabFabricApi.Text = If(fabricApiError, "可以添加")
+                LabFabricApi.Text = If(fabricApiError, PCL.Core.App.I18nService.Get("Download.VersionList.CanAdd"))
                 LabFabricApi.Foreground = ColorGray4
             Else
                 BtnFabricApiClear.Visibility = Visibility.Visible
@@ -434,7 +434,7 @@ Public Class PageInstanceInstall
             If SelectedLegacyFabric Is Nothing Then
                 BtnLegacyFabricClear.Visibility = Visibility.Collapsed
                 ImgLegacyFabric.Visibility = Visibility.Collapsed
-                LabLegacyFabric.Text = If(legacyFabricError, "可以添加")
+                LabLegacyFabric.Text = If(legacyFabricError, PCL.Core.App.I18nService.Get("Download.VersionList.CanAdd"))
                 LabLegacyFabric.Foreground = ColorGray4
             Else
                 BtnLegacyFabricClear.Visibility = Visibility.Visible
@@ -455,7 +455,7 @@ Public Class PageInstanceInstall
             If SelectedLegacyFabricApi Is Nothing Then
                 BtnLegacyFabricApiClear.Visibility = Visibility.Collapsed
                 ImgLegacyFabricApi.Visibility = Visibility.Collapsed
-                LabLegacyFabricApi.Text = If(legacyFabricApiError, "可以添加")
+                LabLegacyFabricApi.Text = If(legacyFabricApiError, PCL.Core.App.I18nService.Get("Download.VersionList.CanAdd"))
                 LabLegacyFabricApi.Foreground = ColorGray4
             Else
                 BtnLegacyFabricApiClear.Visibility = Visibility.Visible
@@ -476,7 +476,7 @@ Public Class PageInstanceInstall
             If SelectedQuilt Is Nothing Then
                 BtnQuiltClear.Visibility = Visibility.Collapsed
                 ImgQuilt.Visibility = Visibility.Collapsed
-                LabQuilt.Text = If(quiltError, "可以添加")
+                LabQuilt.Text = If(quiltError, PCL.Core.App.I18nService.Get("Download.VersionList.CanAdd"))
                 LabQuilt.Foreground = ColorGray4
             Else
                 BtnQuiltClear.Visibility = Visibility.Visible
@@ -497,7 +497,7 @@ Public Class PageInstanceInstall
             If SelectedQSL Is Nothing Then
                 BtnQSLClear.Visibility = Visibility.Collapsed
                 ImgQSL.Visibility = Visibility.Collapsed
-                LabQSL.Text = If(qslError, "可以添加")
+                LabQSL.Text = If(qslError, PCL.Core.App.I18nService.Get("Download.VersionList.CanAdd"))
                 LabQSL.Foreground = ColorGray4
             Else
                 BtnQSLClear.Visibility = Visibility.Visible
@@ -518,7 +518,7 @@ Public Class PageInstanceInstall
             If SelectedLabyModVersion Is Nothing Then
                 BtnLabyModClear.Visibility = Visibility.Collapsed
                 ImgLabyMod.Visibility = Visibility.Collapsed
-                LabLabyMod.Text = If(labyModError, "可以添加")
+                LabLabyMod.Text = If(labyModError, PCL.Core.App.I18nService.Get("Download.VersionList.CanAdd"))
                 LabLabyMod.Foreground = ColorGray4
             Else
                 BtnLabyModClear.Visibility = Visibility.Visible
@@ -539,7 +539,7 @@ Public Class PageInstanceInstall
             If SelectedOptiFabric Is Nothing Then
                 BtnOptiFabricClear.Visibility = Visibility.Collapsed
                 ImgOptiFabric.Visibility = Visibility.Collapsed
-                LabOptiFabric.Text = If(optiFabricError, "可以添加")
+                LabOptiFabric.Text = If(optiFabricError, PCL.Core.App.I18nService.Get("Download.VersionList.CanAdd"))
                 LabOptiFabric.Foreground = ColorGray4
             Else
                 BtnOptiFabricClear.Visibility = Visibility.Visible
@@ -830,10 +830,10 @@ Public Class PageInstanceInstall
         ExitSelectPage() '返回
         Try
             Dim Dict As New Dictionary(Of String, List(Of JObject)) From {
-                {"正式版", New List(Of JObject)},
-                {"预览版", New List(Of JObject)},
-                {"远古版", New List(Of JObject)},
-                {"愚人节版", New List(Of JObject)}
+                {"Release", New List(Of JObject)},
+                {"Snapshot", New List(Of JObject)},
+                {"Old", New List(Of JObject)},
+                {"Special", New List(Of JObject)}
             }
             Dim Versions As JArray = DlClientListLoader.Output.Value("versions")
             For Each Version As JObject In Versions
@@ -842,9 +842,9 @@ Public Class PageInstanceInstall
                 Dim versionId = Version("id").ToString().ToLower()
                 Select Case Type
                     Case "release"
-                        Type = "正式版"
+                        Type = "Release"
                     Case "snapshot", "pending"
-                        Type = "预览版"
+                        Type = "Snapshot"
                         'Mojang 误分类
                         If versionId.StartsWith("1.") AndAlso
                             Not versionId.Contains("combat") AndAlso
@@ -852,37 +852,37 @@ Public Class PageInstanceInstall
                             Not versionId.Contains("experimental") AndAlso
                             Not versionId.Equals("1.2") AndAlso
                             Not versionId.Contains("pre") Then
-                            Type = "正式版"
+                            Type = "Release"
                             Version("type") = "release"
                         End If
                         '愚人节版本
                         Select Case Version("id").ToString.ToLower
                             Case "2point0_blue", "2point0_red", "2point0_purple", "2.0_blue", "2.0_red", "2.0_purple", "2.0"
-                                Type = "愚人节版"
+                                Type = "Special"
                                 Version("id") = Version("id").ToString().Replace("point", ".")
                                 Version("type") = "special"
                                 Version.Add("lore", GetMcFoolName(Version("id")))
                             Case "20w14infinite", "20w14∞"
-                                Type = "愚人节版"
+                                Type = "Special"
                                 Version("id") = "20w14∞"
                                 Version("type") = "special"
                                 Version.Add("lore", GetMcFoolName(Version("id")))
                             Case "3d shareware v1.34", "1.rv-pre1", "15w14a", "2.0", "22w13oneblockatatime", "23w13a_or_b", "24w14potato", "25w14craftmine"
-                                Type = "愚人节版"
+                                Type = "Special"
                                 Version("type") = "special"
                                 Version.Add("lore", GetMcFoolName(Version("id")))
                             Case Else '4/1 自动视作愚人节版
                                 Dim ReleaseDate = Version("releaseTime").Value(Of Date).ToUniversalTime().AddHours(2)
                                 If ReleaseDate.Month = 4 AndAlso ReleaseDate.Day = 1 Then
-                                    Type = "愚人节版"
+                                    Type = "Special"
                                     Version("type") = "special"
                                 End If
                         End Select
                     Case "special"
                         '已被处理的愚人节版
-                        Type = "愚人节版"
+                        Type = "Special"
                     Case Else
-                        Type = "远古版"
+                        Type = "Old"
                 End Select
                 '加入辞典
                 Dict(Type).Add(Version)
@@ -894,14 +894,14 @@ Public Class PageInstanceInstall
             '清空当前
             PanMinecraft.Children.Clear()
             '添加最新版本
-            Dim CardInfo As New MyCard With {.Title = "最新版本", .Margin = New Thickness(0, 15, 0, 15)}
+            Dim CardInfo As New MyCard With {.Title = PCL.Core.App.I18nService.Get("Download.VersionList.Latest"), .Margin = New Thickness(0, 15, 0, 15)}
             Dim TopestVersions As New List(Of JObject)
-            Dim Release As JObject = Dict("正式版")(0).DeepClone()
-            Release("lore") = "最新正式版，发布于 " & Release("releaseTime").Value(Of Date).ToString("yyyy'/'MM'/'dd HH':'mm")
+            Dim Release As JObject = Dict("Release")(0).DeepClone()
+            Release("lore") = String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.LatestRelease"), Release("releaseTime").Value(Of Date).ToString("yyyy'/'MM'/'dd HH':'mm"))
             TopestVersions.Add(Release)
-            If Dict("正式版")(0)("releaseTime").Value(Of Date) < Dict("预览版")(0)("releaseTime").Value(Of Date) Then
-                Dim Snapshot As JObject = Dict("预览版")(0).DeepClone()
-                Snapshot("lore") = "最新预览版，发布于 " & Snapshot("releaseTime").Value(Of Date).ToString("yyyy'/'MM'/'dd HH':'mm")
+            If Dict("Release")(0)("releaseTime").Value(Of Date) < Dict("Snapshot")(0)("releaseTime").Value(Of Date) Then
+                Dim Snapshot As JObject = Dict("Snapshot")(0).DeepClone()
+                Snapshot("lore") = String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.LatestSnapshot"), Snapshot("releaseTime").Value(Of Date).ToString("yyyy'/'MM'/'dd HH':'mm"))
                 TopestVersions.Add(Snapshot)
             End If
             Dim PanInfo As New StackPanel With {.Margin = New Thickness(20, MyCard.SwapedHeight, 18, 0), .VerticalAlignment = VerticalAlignment.Top, .RenderTransform = New TranslateTransform(0, 0), .Tag = TopestVersions}
@@ -917,7 +917,7 @@ Public Class PageInstanceInstall
             For Each Pair As KeyValuePair(Of String, List(Of JObject)) In Dict
                 If Not Pair.Value.Any() Then Continue For
                 '增加卡片
-                Dim NewCard As New MyCard With {.Title = Pair.Key & " (" & Pair.Value.Count & ")", .Margin = New Thickness(0, 0, 0, 15)}
+                Dim NewCard As New MyCard With {.Title = PCL.Core.App.I18nService.Get("Download.VersionList.Type." & Pair.Key) & " (" & Pair.Value.Count & ")", .Margin = New Thickness(0, 0, 0, 15)}
                 Dim NewStack As New StackPanel With {.Margin = New Thickness(20, MyCard.SwapedHeight, 18, 0), .VerticalAlignment = VerticalAlignment.Top, .RenderTransform = New TranslateTransform(0, 0), .Tag = Pair.Value}
                 NewCard.Children.Add(NewStack)
                 NewCard.SwapControl = NewStack
@@ -953,8 +953,8 @@ Public Class PageInstanceInstall
     ''' </summary>
     Private Function LoadOptiFineGetError() As String
         If SelectedLoaderName = "NeoForge" OrElse SelectedLoaderName = "Quilt" OrElse SelectedLoaderName = "LabyMod" Then Return $"与 {SelectedLoaderName} 不兼容"
-        If LoadOptiFine Is Nothing OrElse LoadOptiFine.State.LoadingState = MyLoading.MyLoadingState.Run Then Return "加载中……"
-        If LoadOptiFine.State.LoadingState = MyLoading.MyLoadingState.Error Then Return "获取版本列表失败：" & CType(LoadOptiFine.State, Object).Error.Message
+        If LoadOptiFine Is Nothing OrElse LoadOptiFine.State.LoadingState = MyLoading.MyLoadingState.Run Then Return PCL.Core.App.I18nService.Get("Download.VersionList.Loading")
+        If LoadOptiFine.State.LoadingState = MyLoading.MyLoadingState.Error Then Return PCL.Core.App.I18nService.Get("Download.VersionList.Failed") & CType(LoadOptiFine.State, Object).Error.Message
         '是否有 Cleanroom
         If SelectedCleanroom IsNot Nothing Then Return "与 Cleanroom 不兼容"
         '检查 Forge 1.13 - 1.14.3：全部不兼容
@@ -1390,7 +1390,7 @@ Public Class PageInstanceInstall
             fabricApiName = fabricApiName.ToLower : _vanillaName = _vanillaName.Replace("∞", "infinite").Replace("Combat Test 7c", "1.16_combat-3").ToLower
             If fabricApiName.StartsWith("[" & _vanillaName & "]") Then Return True
             If Not fabricApiName.Contains("/") OrElse Not fabricApiName.Contains("]") Then Return False
-            '直接的判断（例如 1.18.1/22w03a）
+            '直接的判断（例如 1.16.4/5）
             For Each part As String In fabricApiName.BeforeFirst("]").TrimStart("[").Split("/")
                 If part = _vanillaName Then Return True
             Next
@@ -1501,8 +1501,8 @@ Public Class PageInstanceInstall
     ''' 获取 LegacyFabric 的加载异常信息。若正常则返回 Nothing。
     ''' </summary>
     Private Function LoadLegacyFabricGetError() As String
-        If LoadLegacyFabric Is Nothing OrElse LoadLegacyFabric.State.LoadingState = MyLoading.MyLoadingState.Run Then Return "加载中……"
-        If LoadLegacyFabric.State.LoadingState = MyLoading.MyLoadingState.Error Then Return "获取版本列表失败：" & CType(LoadLegacyFabric.State, Object).Error.Message
+        If LoadLegacyFabric Is Nothing OrElse LoadLegacyFabric.State.LoadingState = MyLoading.MyLoadingState.Run Then Return PCL.Core.App.I18nService.Get("Download.VersionList.Loading")
+        If LoadLegacyFabric.State.LoadingState = MyLoading.MyLoadingState.Error Then Return PCL.Core.App.I18nService.Get("Download.VersionList.Failed") & CType(LoadLegacyFabric.State, Object).Error.Message
         For Each Version As JObject In DlLegacyFabricListLoader.Output.Value("game")
             If Version("version").ToString = _vanillaName Then
                 If SelectedLiteLoader IsNot Nothing Then Return "与 LiteLoader 不兼容"
@@ -1516,6 +1516,7 @@ Public Class PageInstanceInstall
     '限制展开
     Private Sub CardLegacyFabric_PreviewSwap(sender As Object, e As RouteEventArgs) Handles CardLegacyFabric.PreviewSwap
         If LoadLegacyFabricGetError() IsNot Nothing Then e.Handled = True
+
     End Sub
 
     ''' <summary>
@@ -1584,12 +1585,12 @@ Public Class PageInstanceInstall
     ''' 获取 LegacyFabricApi 的加载异常信息。若正常则返回 Nothing。
     ''' </summary>
     Private Function LoadLegacyFabricApiGetError() As String
-        If LoadLegacyFabricApi Is Nothing OrElse LoadLegacyFabricApi.State.LoadingState = MyLoading.MyLoadingState.Run Then Return "加载中……"
-        If LoadLegacyFabricApi.State.LoadingState = MyLoading.MyLoadingState.Error Then Return "获取版本列表失败：" & CType(LoadLegacyFabricApi.State, Object).Error.Message
+        If LoadLegacyFabricApi Is Nothing OrElse LoadLegacyFabricApi.State.LoadingState = MyLoading.MyLoadingState.Run Then Return PCL.Core.App.I18nService.Get("Download.VersionList.Loading")
+        If LoadLegacyFabricApi.State.LoadingState = MyLoading.MyLoadingState.Error Then Return PCL.Core.App.I18nService.Get("Download.VersionList.Failed") & CType(LoadLegacyFabricApi.State, Object).Error.Message
         If SelectedAPIName IsNot Nothing AndAlso SelectedAPIName IsNot "Legacy Fabric API" Then Return $"与 {SelectedAPIName} 不兼容"
         If DlLegacyFabricApiLoader.Output Is Nothing Then
             If SelectedLegacyFabric Is Nothing Then Return "需要安装 LegacyFabric"
-            Return "加载中……"
+            Return PCL.Core.App.I18nService.Get("Download.VersionList.Loading")
         End If
         For Each Version In DlLegacyFabricApiLoader.Output
             If Not IsSuitableLegacyFabricApi(Version.GameVersions, _vanillaName) Then Continue For
@@ -1747,12 +1748,12 @@ Public Class PageInstanceInstall
     ''' 获取 QSL 的加载异常信息。若正常则返回 Nothing。
     ''' </summary>
     Private Function LoadQSLGetError() As String
-        If LoadQSL Is Nothing OrElse LoadQSL.State.LoadingState = MyLoading.MyLoadingState.Run Then Return "正在获取版本列表……"
-        If LoadQSL.State.LoadingState = MyLoading.MyLoadingState.Error Then Return "获取版本列表失败：" & CType(LoadQSL.State, Object).Error.Message
+        If LoadQSL Is Nothing OrElse LoadQSL.State.LoadingState = MyLoading.MyLoadingState.Run Then Return PCL.Core.App.I18nService.Get("Download.VersionList.Loading")
+        If LoadQSL.State.LoadingState = MyLoading.MyLoadingState.Error Then Return PCL.Core.App.I18nService.Get("Download.VersionList.Failed") & CType(LoadQSL.State, Object).Error.Message
         If SelectedAPIName IsNot Nothing AndAlso SelectedAPIName IsNot "QFAPI / QSL" Then Return $"与 {SelectedAPIName} 不兼容"
         If DlQSLLoader.Output Is Nothing Then
             If SelectedQuilt Is Nothing Then Return "需要安装 Quilt"
-            Return "正在获取版本列表……"
+            Return PCL.Core.App.I18nService.Get("Download.VersionList.Loading")
         End If
         For Each Version In DlQSLLoader.Output
             If Not IsSuitableQSL(Version.GameVersions, _vanillaName) Then Continue For
@@ -1842,24 +1843,24 @@ Public Class PageInstanceInstall
     ''' 获取 OptiFabric 的加载异常信息。若正常则返回 Nothing。
     ''' </summary>
     Private Function LoadOptiFabricGetError() As String
-        If VanillaDrop >= 140 AndAlso VanillaDrop <= 150 Then Return "不兼容老版本 Fabric，请手动下载 OptiFabric Origins"
+        If VanillaDrop >= 140 AndAlso VanillaDrop <= 150 Then Return PCL.Core.App.I18nService.Get("Download.VersionList.OptiFabric.OldFabric")
         '检查 Loader
         If GetLoaderError(LoadOptiFabric) IsNot Nothing Then Return GetLoaderError(LoadOptiFabric)
         '检查版本
         If DlOptiFabricLoader.Output Is Nothing Then
-            If SelectedFabric Is Nothing AndAlso SelectedOptiFine Is Nothing Then Return "需要安装 OptiFine 与 Fabric"
-            If SelectedFabric Is Nothing Then Return "需要安装 Fabric"
-            If SelectedOptiFine Is Nothing Then Return "需要安装 OptiFine"
-            Return "获取中……"
+            If SelectedFabric Is Nothing AndAlso SelectedOptiFine Is Nothing Then Return PCL.Core.App.I18nService.Fill("Download.VersionList.Require2", "OptiFine", "Fabric")
+            If SelectedFabric Is Nothing Then Return PCL.Core.App.I18nService.Fill("Download.VersionList.Require", "Fabric")
+            If SelectedOptiFine Is Nothing Then Return PCL.Core.App.I18nService.Fill("Download.VersionList.Require", "OptiFine")
+            Return PCL.Core.App.I18nService.Get("Download.VersionList.LoadingShort")
         End If
         For Each version In DlOptiFabricLoader.Output
             If Not IsOptiFabricCompatible(version) Then Continue For '2135#
-            If SelectedFabric Is Nothing AndAlso SelectedOptiFine Is Nothing Then Return "需要安装 OptiFine 与 Fabric"
-            If SelectedFabric Is Nothing Then Return "需要安装 Fabric"
-            If SelectedOptiFine Is Nothing Then Return "需要安装 OptiFine"
+            If SelectedFabric Is Nothing AndAlso SelectedOptiFine Is Nothing Then Return PCL.Core.App.I18nService.Fill("Download.VersionList.Require2", "OptiFine", "Fabric")
+            If SelectedFabric Is Nothing Then Return PCL.Core.App.I18nService.Fill("Download.VersionList.Require", "Fabric")
+            If SelectedOptiFine Is Nothing Then Return PCL.Core.App.I18nService.Fill("Download.VersionList.Require", "OptiFine")
             Return Nothing '通过检查
         Next
-        Return "无可用版本"
+        Return PCL.Core.App.I18nService.Get("Download.VersionList.NoVersion")
     End Function
 
     '限制展开
@@ -1919,8 +1920,8 @@ Public Class PageInstanceInstall
     ''' 获取 LabyMod 的加载异常信息。若正常则返回 Nothing。
     ''' </summary>
     Private Function LoadLabyModGetError() As String
-        If LoadLabyMod Is Nothing OrElse LoadLabyMod.State.LoadingState = MyLoading.MyLoadingState.Run Then Return "加载中……"
-        If LoadLabyMod.State.LoadingState = MyLoading.MyLoadingState.Error Then Return "获取版本列表失败：" & CType(LoadLabyMod.State, Object).Error.Message
+        If LoadLabyMod Is Nothing OrElse LoadLabyMod.State.LoadingState = MyLoading.MyLoadingState.Run Then Return PCL.Core.App.I18nService.Get("Download.VersionList.Loading")
+        If LoadLabyMod.State.LoadingState = MyLoading.MyLoadingState.Error Then Return PCL.Core.App.I18nService.Get("Download.VersionList.Failed") & CType(LoadLabyMod.State, Object).Error.Message
         '检查 Loader
         If GetLoaderError(LoadLabyMod) IsNot Nothing Then Return GetLoaderError(LoadLabyMod)
         If SelectedOptiFine IsNot Nothing Then Return "与 OptiFine 不兼容"
@@ -2073,16 +2074,16 @@ Public Class PageInstanceInstall
 #End Region
 
     Private Function GetLoaderError(loader As MyLoading) As String
-        If loader Is Nothing Then Return "获取中……"
-        If Not loader.State.IsLoader Then Return "获取中……"
+        If loader Is Nothing Then Return PCL.Core.App.I18nService.Get("Download.VersionList.LoadingShort")
+        If Not loader.State.IsLoader Then Return PCL.Core.App.I18nService.Get("Download.VersionList.LoadingShort")
         Select Case loader.State.LoadingState
             Case MyLoading.MyLoadingState.Run
-                Return "获取中……"
+                Return PCL.Core.App.I18nService.Get("Download.VersionList.LoadingShort")
             Case MyLoading.MyLoadingState.Error
                 Dim message As String = CType(loader.State, LoaderBase).Error.Message
-                Return If(message = "无可用版本", "无可用版本", "获取失败：" & message)
+                Return If(message = "无可用版本", PCL.Core.App.I18nService.Get("Download.VersionList.NoVersion"), PCL.Core.App.I18nService.Get("Download.VersionList.FailedShort") & message)
             Case MyLoading.MyLoadingState.Unloaded
-                Return "未知错误，状态为 Unloaded"
+                Return PCL.Core.App.I18nService.Get("Download.VersionList.Unloaded")
             Case Else
                 Return Nothing
         End Select

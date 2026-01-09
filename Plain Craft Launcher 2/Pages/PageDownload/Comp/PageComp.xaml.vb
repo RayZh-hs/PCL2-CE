@@ -46,7 +46,7 @@ Public Class PageComp
         Set(Value As String)
             If _TypeName = Value Then Return
             _TypeName = Value
-            Loader.Name = $"社区资源获取：{Value}"
+            ReloadTitle()
         End Set
     End Property
     Private _TypeName As String = ""
@@ -61,8 +61,7 @@ Public Class PageComp
         Set(Value As String)
             If _TypeNameSpaced = Value Then Return
             _TypeNameSpaced = Value
-            PanSearchBox.HintText = $"搜索{Value}"
-            Load.Text = $"正在获取{Value}列表"
+            ReloadTitle()
         End Set
     End Property
     Private _TypeNameSpaced As String = ""
@@ -77,10 +76,31 @@ Public Class PageComp
         Set(Value As CompType)
             If _Type = Value Then Return
             _Type = Value
-            BtnSearchInstallModPack.Visibility = If(Value = CompType.ModPack, Visibility.Visible, Visibility.Collapsed)
+            BtnSearchInstallModPack.Visibility = If(Value = ModComp.CompType.ModPack, Visibility.Visible, Visibility.Collapsed)
+            ReloadTitle()
         End Set
     End Property
     Private _Type As CompType = -1
+
+    Private Sub ReloadTitle()
+        Dim TypeName As String = GetLocTypeName(_Type)
+        Loader.Name = PCL.Core.App.I18nService.Fill("Download.Comp.LoaderName", TypeName)
+        PanSearchBox.HintText = PCL.Core.App.I18nService.Fill("Download.Comp.SearchHint", TypeName)
+        Load.Text = PCL.Core.App.I18nService.Fill("Download.Comp.FetchingList", TypeName)
+    End Sub
+    Private Function GetLocTypeName(Type As ModComp.CompType) As String
+        Select Case Type
+            Case ModComp.CompType.ModPack : Return PCL.Core.App.I18nService.Get("Download.Comp.Type.ModPack")
+            Case ModComp.CompType.Mod : Return PCL.Core.App.I18nService.Get("Download.Comp.Type.Mod")
+            Case ModComp.CompType.ResourcePack : Return PCL.Core.App.I18nService.Get("Download.Comp.Type.ResourcePack")
+            Case ModComp.CompType.Shader : Return PCL.Core.App.I18nService.Get("Download.Comp.Type.ShaderPack")
+            Case ModComp.CompType.DataPack : Return PCL.Core.App.I18nService.Get("Download.Comp.Type.DataPack")
+            Case ModComp.CompType.World : Return PCL.Core.App.I18nService.Get("Download.Comp.Type.World")
+            Case ModComp.CompType.Plugin : Return PCL.Core.App.I18nService.Get("Download.Comp.Type.Plugin")
+            Case ModComp.CompType.Schematic : Return PCL.Core.App.I18nService.Get("Download.Comp.Type.Schematic")
+            Case Else : Return If(String.IsNullOrEmpty(_TypeName), _TypeNameSpaced, _TypeName).Trim()
+        End Select
+    End Function
 
 #End Region
 

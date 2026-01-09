@@ -1,5 +1,4 @@
-﻿
-Imports PCL.Core.UI
+﻿Imports PCL.Core.UI
 
 Public Class PageDownloadCompDetail
     Private _compItem As MyCompItem = Nothing
@@ -436,12 +435,12 @@ GroupDone:
             Try
                 Dim Desc As String = Nothing
                 Select Case File.Type
-                    Case CompType.ModPack : Desc = "整合包"
-                    Case CompType.Mod : Desc = "Mod "
-                    Case CompType.ResourcePack : Desc = "资源包"
-                    Case CompType.Shader : Desc = "光影包"
-                    Case CompType.DataPack : Desc = "数据包"
-                    Case CompType.World : Desc = "世界"
+                    Case CompType.ModPack : Desc = PCL.Core.App.I18nService.Get("Download.Comp.Type.ModPack")
+                    Case CompType.Mod : Desc = PCL.Core.App.I18nService.Get("Download.Comp.Type.Mod")
+                    Case CompType.ResourcePack : Desc = PCL.Core.App.I18nService.Get("Download.Comp.Type.ResourcePack")
+                    Case CompType.Shader : Desc = PCL.Core.App.I18nService.Get("Download.Comp.Type.ShaderPack")
+                    Case CompType.DataPack : Desc = PCL.Core.App.I18nService.Get("Download.Comp.Type.DataPack")
+                    Case CompType.World : Desc = PCL.Core.App.I18nService.Get("Download.Comp.Type.World")
                 End Select
                 '确认默认保存位置
                 Dim DefaultFolder As String = Nothing

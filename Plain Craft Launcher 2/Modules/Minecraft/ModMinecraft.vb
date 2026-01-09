@@ -1222,29 +1222,29 @@ ExitDataLoad:
         If name.StartsWithF("2.0") OrElse name.StartsWithF("2point0") Then
             Dim tag = ""
             If name.EndsWith("red") Then
-                tag = "（红色版本）"
+                tag = PCL.Core.App.I18nService.Get("Global.Fool.2.0.Red")
             ElseIf name.EndsWith("blue") Then
-                tag = "（蓝色版本）"
+                tag = PCL.Core.App.I18nService.Get("Global.Fool.2.0.Blue")
             ElseIf name.EndsWith("purple") Then
-                tag = "（紫色版本）"
+                tag = PCL.Core.App.I18nService.Get("Global.Fool.2.0.Purple")
             End If
-            Return "2013 | 这个秘密计划了两年的更新将游戏推向了一个新高度！" & tag
+            Return PCL.Core.App.I18nService.Get("Global.Fool.2.0") & tag
         ElseIf name = "15w14a" Then
-            Return "2015 | 作为一款全年龄向的游戏，我们需要和平，需要爱与拥抱。"
+            Return PCL.Core.App.I18nService.Get("Global.Fool.15w14a")
         ElseIf name = "1.rv-pre1" Then
-            Return "2016 | 是时候将现代科技带入 Minecraft 了！"
+            Return PCL.Core.App.I18nService.Get("Global.Fool.1.rv-pre1")
         ElseIf name = "3d shareware v1.34" Then
-            Return "2019 | 我们从地下室的废墟里找到了这个开发于 1994 年的杰作！"
+            Return PCL.Core.App.I18nService.Get("Global.Fool.3dShareware")
         ElseIf name.StartsWithF("20w14inf") OrElse name = "20w14∞" Then
-            Return "2020 | 我们加入了 20 亿个新的维度，让无限的想象变成了现实！"
+            Return PCL.Core.App.I18nService.Get("Global.Fool.20w14infinite")
         ElseIf name = "22w13oneblockatatime" Then
-            Return "2022 | 一次一个方块更新！迎接全新的挖掘、合成与骑乘玩法吧！"
+             Return PCL.Core.App.I18nService.Get("Global.Fool.22w13oneblockatatime")
         ElseIf name = "23w13a_or_b" Then
-            Return "2023 | 研究表明：玩家喜欢作出选择——越多越好！"
+             Return PCL.Core.App.I18nService.Get("Global.Fool.23w13a_or_b")
         ElseIf name = "24w14potato" Then
-            Return "2024 | 毒马铃薯一直都被大家忽视和低估，于是我们超级加强了它！"
+             Return PCL.Core.App.I18nService.Get("Global.Fool.24w14potato")
         ElseIf name = "25w14craftmine" Then
-            Return "2025 | 你可以合成任何东西——包括合成你的世界！"
+             Return PCL.Core.App.I18nService.Get("Global.Fool.25w14craftmine")
         Else
             Return ""
         End If
