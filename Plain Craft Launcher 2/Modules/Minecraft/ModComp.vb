@@ -3,6 +3,7 @@ Imports System.Net.Http
 Imports System.Collections.Concurrent
 Imports LiteDB
 Imports PCL.Core.Utils
+Imports PCL.Core.App
 
 Public Module ModComp
 
@@ -303,6 +304,7 @@ Public Module ModComp
         ''' </summary>
         Public ReadOnly Property TranslatedName As String
             Get
+                If I18nService.CurrentLanguage <> "zh-CN" Then Return RawName
                 Return If(DatabaseEntry Is Nothing OrElse DatabaseEntry.ChineseName = "", RawName, DatabaseEntry.ChineseName)
             End Get
         End Property
@@ -311,6 +313,7 @@ Public Module ModComp
         ''' </summary>
         Public ReadOnly Property ChineseDescription As Task(Of String)
             Get
+                If I18nService.CurrentLanguage <> "zh-CN" Then Return Task.FromResult(CType(Nothing, String))
                 Return GetChineseDescriptionAsync()
             End Get
         End Property
@@ -336,7 +339,7 @@ Public Module ModComp
                 End If
             Catch ex As HttpRequestException
                 If ex.Message.Contains("404") Then
-                    MyMsgBox("当前资源的简介暂无译文", "获取译文失败", Button1:="我知道了")
+                    MyMsgBox(I18nService.Get("Download.Comp.Translate.NoContent"), I18nService.Get("Download.Comp.Translate.Failed"), Button1:=I18nService.Get("General.Ok"))
                     Return Nothing
                 End If
                 Log(ex, "获取中文描述时出现错误", LogLevel.Hint)
@@ -435,90 +438,97 @@ Public Module ModComp
                     ModLoaders = ModLoaders.Distinct.OrderBy(Of Integer)(Function(t) t).ToList
                     'Tags
                     Tags = New List(Of String)
-                    For Each Category In If(Data("categories"), New JArray). '镜像源 API 可能丢失此字段 (4267#issuecomment-2254590831)
-                        Select(Of Integer)(Function(t) t("id")).Distinct.OrderByDescending(Function(c) c)
-                        Select Case Category
+                    Dim Categories = If(Data("categories"), New JArray)
+                    If I18nService.CurrentLanguage <> "zh-CN" Then
+                        For Each CategoryToken In Categories
+                            Tags.Add(CategoryToken("name").ToString())
+                        Next
+                    Else
+                        For Each Category In Categories. '镜像源 API 可能丢失此字段 (4267#issuecomment-2254590831)
+                            Select(Of Integer)(Function(t) t("id")).Distinct.OrderByDescending(Function(c) c)
+                            Select Case Category
                             'Mod
-                            Case 406 : Tags.Add("世界元素")
-                            Case 407 : Tags.Add("生物群系")
-                            Case 410 : Tags.Add("维度")
-                            Case 408 : Tags.Add("矿物/资源")
-                            Case 409 : Tags.Add("天然结构")
-                            Case 412 : Tags.Add("科技")
-                            Case 415 : Tags.Add("管道/物流")
-                            Case 4843 : Tags.Add("自动化")
-                            Case 417 : Tags.Add("能源")
-                            Case 4558 : Tags.Add("红石")
-                            Case 436 : Tags.Add("食物/烹饪")
-                            Case 416 : Tags.Add("农业")
-                            Case 414 : Tags.Add("运输")
-                            Case 420 : Tags.Add("仓储")
-                            Case 419 : Tags.Add("魔法")
-                            Case 422 : Tags.Add("冒险")
-                            Case 424 : Tags.Add("装饰")
-                            Case 411 : Tags.Add("生物")
-                            Case 434 : Tags.Add("装备")
-                            Case 6814 : Tags.Add("性能优化")
-                            Case 9026 : Tags.Add("创造模式")
-                            Case 423 : Tags.Add("信息显示")
-                            Case 435 : Tags.Add("服务器")
-                            Case 5191 : Tags.Add("改良")
-                            Case 421 : Tags.Add("支持库")
+                            Case 406 : Tags.Add(I18nService.Get("Tag.WorldGen"))
+                            Case 407 : Tags.Add(I18nService.Get("Tag.Biomes"))
+                            Case 410 : Tags.Add(I18nService.Get("Tag.Dimensions"))
+                            Case 408 : Tags.Add(I18nService.Get("Tag.OresResources"))
+                            Case 409 : Tags.Add(I18nService.Get("Tag.Structures"))
+                            Case 412 : Tags.Add(I18nService.Get("Tag.Technology"))
+                            Case 415 : Tags.Add(I18nService.Get("Tag.Logistics"))
+                            Case 4843 : Tags.Add(I18nService.Get("Tag.Automation"))
+                            Case 417 : Tags.Add(I18nService.Get("Tag.Energy"))
+                            Case 4558 : Tags.Add(I18nService.Get("Tag.Redstone"))
+                            Case 436 : Tags.Add(I18nService.Get("Tag.Food"))
+                            Case 416 : Tags.Add(I18nService.Get("Tag.Farming"))
+                            Case 414 : Tags.Add(I18nService.Get("Tag.Transportation"))
+                            Case 420 : Tags.Add(I18nService.Get("Tag.Storage"))
+                            Case 419 : Tags.Add(I18nService.Get("Tag.Magic"))
+                            Case 422 : Tags.Add(I18nService.Get("Tag.Adventure"))
+                            Case 424 : Tags.Add(I18nService.Get("Tag.Decoration"))
+                            Case 411 : Tags.Add(I18nService.Get("Tag.Mobs"))
+                            Case 434 : Tags.Add(I18nService.Get("Tag.Equipment"))
+                            Case 6814 : Tags.Add(I18nService.Get("Tag.Optimization"))
+                            Case 9026 : Tags.Add(I18nService.Get("Tag.Creative"))
+                            Case 423 : Tags.Add(I18nService.Get("Tag.MapInfo"))
+                            Case 435 : Tags.Add(I18nService.Get("Tag.Server"))
+                            Case 5191 : Tags.Add(I18nService.Get("Tag.Tweaks"))
+                            Case 421 : Tags.Add(I18nService.Get("Tag.Library"))
                             '整合包
-                            Case 4484 : Tags.Add("多人")
-                            Case 4479 : Tags.Add("硬核")
-                            Case 4483 : Tags.Add("战斗")
-                            Case 4478 : Tags.Add("任务")
-                            Case 4472 : Tags.Add("科技")
-                            Case 4473 : Tags.Add("魔法")
-                            Case 4475 : Tags.Add("冒险")
-                            Case 4476 : Tags.Add("探索")
-                            Case 4477 : Tags.Add("小游戏")
-                            Case 4471 : Tags.Add("科幻")
-                            Case 4736 : Tags.Add("空岛")
-                            Case 5128 : Tags.Add("原版改良")
-                            Case 4487 : Tags.Add("FTB")
-                            Case 4480 : Tags.Add("基于地图")
-                            Case 4481 : Tags.Add("轻量")
-                            Case 4482 : Tags.Add("大型")
+                            Case 4484 : Tags.Add(I18nService.Get("Tag.Multiplayer"))
+                            Case 4479 : Tags.Add(I18nService.Get("Tag.Hardcore"))
+                            Case 4483 : Tags.Add(I18nService.Get("Tag.Combat"))
+                            Case 4478 : Tags.Add(I18nService.Get("Tag.Quests"))
+                            Case 4472 : Tags.Add(I18nService.Get("Tag.Technology"))
+                            Case 4473 : Tags.Add(I18nService.Get("Tag.Magic"))
+                            Case 4475 : Tags.Add(I18nService.Get("Tag.Adventure"))
+                            Case 4476 : Tags.Add(I18nService.Get("Tag.Exploration"))
+                            Case 4477 : Tags.Add(I18nService.Get("Tag.MiniGame"))
+                            Case 4471 : Tags.Add(I18nService.Get("Tag.SciFi"))
+                            Case 4736 : Tags.Add(I18nService.Get("Tag.Skyblock"))
+                            Case 5128 : Tags.Add(I18nService.Get("Tag.VanillaPlus"))
+                            Case 4487 : Tags.Add(I18nService.Get("Tag.FTB"))
+                            Case 4480 : Tags.Add(I18nService.Get("Tag.MapBased"))
+                            Case 4481 : Tags.Add(I18nService.Get("Tag.Lightweight"))
+                            Case 4482 : Tags.Add(I18nService.Get("Tag.Large"))
                             '资源包
-                            Case 403 : Tags.Add("原版风")
-                            Case 400 : Tags.Add("写实风")
-                            Case 401 : Tags.Add("现代风")
-                            Case 402 : Tags.Add("中世纪")
-                            Case 399 : Tags.Add("蒸汽朋克")
-                            Case 5244 : Tags.Add("含字体")
-                            Case 404 : Tags.Add("动态效果")
-                            Case 4465 : Tags.Add("兼容 Mod")
+                            Case 403 : Tags.Add(I18nService.Get("Tag.VanillaLike"))
+                            Case 400 : Tags.Add(I18nService.Get("Tag.Realistic"))
+                            Case 401 : Tags.Add(I18nService.Get("Tag.Modern"))
+                            Case 402 : Tags.Add(I18nService.Get("Tag.Medieval"))
+                            Case 399 : Tags.Add(I18nService.Get("Tag.Steampunk"))
+                            Case 5244 : Tags.Add(I18nService.Get("Tag.FontIncluded"))
+                            Case 404 : Tags.Add(I18nService.Get("Tag.Animated"))
+                            Case 4465 : Tags.Add(I18nService.Get("Tag.ModSupport"))
                             Case 393 : Tags.Add("16x")
                             Case 394 : Tags.Add("32x")
                             Case 395 : Tags.Add("64x")
                             Case 396 : Tags.Add("128x")
                             Case 397 : Tags.Add("256x")
-                            Case 398 : Tags.Add("超高清")
-                            Case 5193 : Tags.Add("数据包") '有这个 Tag 的项会从资源包请求中被移除
+                            Case 398 : Tags.Add(I18nService.Get("Tag.HighRes"))
+                            Case 5193 : Tags.Add(I18nService.Get("Tag.DataPack")) '有这个 Tag 的项会从资源包请求中被移除
                             '光影包
-                            Case 6553 : Tags.Add("写实风")
-                            Case 6554 : Tags.Add("幻想风")
-                            Case 6555 : Tags.Add("原版风")
+                            Case 6553 : Tags.Add(I18nService.Get("Tag.Realistic"))
+                            Case 6554 : Tags.Add(I18nService.Get("Tag.Fantasy"))
+                            Case 6555 : Tags.Add(I18nService.Get("Tag.VanillaLike"))
                             '数据包
-                            Case 6948 : Tags.Add("冒险")
-                            Case 6949 : Tags.Add("幻想")
-                            Case 6950 : Tags.Add("支持库")
-                            Case 6952 : Tags.Add("魔法")
-                            Case 6946 : Tags.Add("Mod 相关")
-                            Case 6951 : Tags.Add("科技")
-                            Case 6953 : Tags.Add("实用")
+                            Case 6948 : Tags.Add(I18nService.Get("Tag.Adventure"))
+                            Case 6949 : Tags.Add(I18nService.Get("Tag.Fantasy"))
+                            Case 6950 : Tags.Add(I18nService.Get("Tag.Library"))
+                            Case 6952 : Tags.Add(I18nService.Get("Tag.Magic"))
+                            Case 6946 : Tags.Add(I18nService.Get("Tag.ModRelated"))
+                            Case 6951 : Tags.Add(I18nService.Get("Tag.Technology"))
+                            Case 6953 : Tags.Add(I18nService.Get("Tag.Utility"))
                             '世界
-                            Case 248 : Tags.Add("冒险")
-                            Case 249 : Tags.Add("创造")
-                            Case 250 : Tags.Add("小游戏")
-                            Case 251 : Tags.Add("跑酷")
-                            Case 252 : Tags.Add("解谜")
-                            Case 253 : Tags.Add("生存")
-                            Case 4464 : Tags.Add("Mod 世界")
+                            Case 248 : Tags.Add(I18nService.Get("Tag.Adventure"))
+                            Case 249 : Tags.Add(I18nService.Get("Tag.Creative"))
+                            Case 250 : Tags.Add(I18nService.Get("Tag.MiniGame"))
+                            Case 251 : Tags.Add(I18nService.Get("Tag.Parkour"))
+                            Case 252 : Tags.Add(I18nService.Get("Tag.Puzzle"))
+                            Case 253 : Tags.Add(I18nService.Get("Tag.Survival"))
+                            Case 4464 : Tags.Add(I18nService.Get("Tag.ModWorld"))
                         End Select
                     Next
+                    End If
 #End Region
                 Else
 #Region "Modrinth"
@@ -557,6 +567,10 @@ Public Module ModComp
                         Next
                     End If
                     For Each Category In Data("categories").Select(Function(t) t.ToString)
+                    If I18nService.CurrentLanguage <> "zh-CN" AndAlso Not {"forge", "fabric", "quilt", "neoforge", "datapack"}.Contains(Category) Then
+                            Tags.Add(StrConv(Category.Replace("-", " "), VbStrConv.ProperCase))
+                            Continue For
+                        End If
                         Select Case Category
                             '加载器
                             Case "forge" : ModLoaders.Add(CompLoaderType.Forge)
@@ -565,74 +579,74 @@ Public Module ModComp
                             Case "neoforge" : ModLoaders.Add(CompLoaderType.NeoForge)
                             Case "datapack" : Type = CompType.DataPack '若包含数据包版本，则优先标为 DataPack
                             '共用
-                            Case "technology" : Tags.Add("科技")
-                            Case "magic" : Tags.Add("魔法")
-                            Case "adventure" : Tags.Add("冒险")
-                            Case "utility" : Tags.Add("实用")
-                            Case "optimization" : Tags.Add("性能优化")
-                            Case "vanilla-like" : Tags.Add("原版风")
-                            Case "realistic" : Tags.Add("写实风")
+                            Case "technology" : Tags.Add(I18nService.Get("Tag.Technology"))
+                            Case "magic" : Tags.Add(I18nService.Get("Tag.Magic"))
+                            Case "adventure" : Tags.Add(I18nService.Get("Tag.Adventure"))
+                            Case "utility" : Tags.Add(I18nService.Get("Tag.Utility"))
+                            Case "optimization" : Tags.Add(I18nService.Get("Tag.Optimization"))
+                            Case "vanilla-like" : Tags.Add(I18nService.Get("Tag.VanillaLike"))
+                            Case "realistic" : Tags.Add(I18nService.Get("Tag.Realistic"))
                             'Mod/数据包
-                            Case "worldgen" : Tags.Add("世界元素")
-                            Case "food" : Tags.Add("食物/烹饪")
-                            Case "game-mechanics" : Tags.Add("游戏机制")
-                            Case "transportation" : Tags.Add("运输")
-                            Case "storage" : Tags.Add("仓储")
-                            Case "decoration" : If Type <> CompType.ResourcePack Then Tags.Add("装饰")
-                            Case "mobs" : If Type <> CompType.ResourcePack Then Tags.Add("生物")
-                            Case "equipment" : If Type <> CompType.ResourcePack Then Tags.Add("装备")
-                            Case "social" : Tags.Add("服务器")
-                            Case "library" : Tags.Add("支持库")
+                            Case "worldgen" : Tags.Add(I18nService.Get("Tag.WorldGen"))
+                            Case "food" : Tags.Add(I18nService.Get("Tag.Food"))
+                            Case "game-mechanics" : Tags.Add(I18nService.Get("Tag.GameMechanics"))
+                            Case "transportation" : Tags.Add(I18nService.Get("Tag.Transportation"))
+                            Case "storage" : Tags.Add(I18nService.Get("Tag.Storage"))
+                            Case "decoration" : If Type <> CompType.ResourcePack Then Tags.Add(I18nService.Get("Tag.Decoration"))
+                            Case "mobs" : If Type <> CompType.ResourcePack Then Tags.Add(I18nService.Get("Tag.Mobs"))
+                            Case "equipment" : If Type <> CompType.ResourcePack Then Tags.Add(I18nService.Get("Tag.Equipment"))
+                            Case "social" : Tags.Add(I18nService.Get("Tag.Server"))
+                            Case "library" : Tags.Add(I18nService.Get("Tag.Library"))
                             '整合包
-                            Case "multiplayer" : Tags.Add("多人")
-                            Case "challenging" : Tags.Add("硬核")
-                            Case "combat" : Tags.Add("战斗")
-                            Case "quests" : Tags.Add("任务")
-                            Case "kitchen-sink" : Tags.Add("水槽包")
-                            Case "lightweight" : Tags.Add("轻量")
+                            Case "multiplayer" : Tags.Add(I18nService.Get("Tag.Multiplayer"))
+                            Case "challenging" : Tags.Add(I18nService.Get("Tag.Hardcore"))
+                            Case "combat" : Tags.Add(I18nService.Get("Tag.Combat"))
+                            Case "quests" : Tags.Add(I18nService.Get("Tag.Quests"))
+                            Case "kitchen-sink" : Tags.Add(I18nService.Get("Tag.KitchenSink"))
+                            Case "lightweight" : Tags.Add(I18nService.Get("Tag.Lightweight"))
                             '资源包
-                            Case "simplistic" : Tags.Add("简洁")
-                            Case "combat" : Tags.Add("战斗")
-                            Case "tweaks" : Tags.Add("改良")
+                            Case "simplistic" : Tags.Add(I18nService.Get("Tag.Simplistic"))
+                            Case "combat" : Tags.Add(I18nService.Get("Tag.Combat"))
+                            Case "tweaks" : Tags.Add(I18nService.Get("Tag.Tweaks"))
 
-                            Case "8x-" : Tags.Add("极简")
+                            Case "8x-" : Tags.Add(I18nService.Get("Tag.Simplistic"))
                             Case "16x" : Tags.Add("16x")
                             Case "32x" : Tags.Add("32x")
                             Case "48x" : Tags.Add("48x")
                             Case "64x" : Tags.Add("64x")
                             Case "128x" : Tags.Add("128x")
                             Case "256x" : Tags.Add("256x")
-                            Case "512x+" : Tags.Add("超高清")
+                            Case "512x+" : Tags.Add(I18nService.Get("Tag.HighRes"))
 
-                            Case "audio" : Tags.Add("含声音")
-                            Case "fonts" : Tags.Add("含字体")
-                            Case "models" : Tags.Add("含模型")
-                            Case "gui" : Tags.Add("含 UI")
-                            Case "locale" : Tags.Add("含语言")
-                            Case "core-shaders" : Tags.Add("核心着色器")
-                            Case "modded" : Tags.Add("兼容 Mod")
+                            Case "audio" : Tags.Add(I18nService.Get("Tag.Audio"))
+                            Case "fonts" : Tags.Add(I18nService.Get("Tag.FontIncluded"))
+                            Case "models" : Tags.Add(I18nService.Get("Tag.Models"))
+                            Case "gui" : Tags.Add(I18nService.Get("Tag.Gui"))
+                            Case "locale" : Tags.Add(I18nService.Get("Tag.Languages"))
+                            Case "core-shaders" : Tags.Add(I18nService.Get("Tag.CoreShaders"))
+                            Case "modded" : Tags.Add(I18nService.Get("Tag.ModSupport"))
                             '光影包
-                            Case "fantasy" : Tags.Add("幻想风")
-                            Case "semi-realistic" : Tags.Add("半写实风")
-                            Case "cartoon" : Tags.Add("卡通风")
+                            Case "fantasy" : Tags.Add(I18nService.Get("Tag.Fantasy"))
+                            Case "semi-realistic" : Tags.Add(I18nService.Get("Tag.SemiRealistic"))
+                            Case "cartoon" : Tags.Add(I18nService.Get("Tag.Cartoon"))
                             '暂时不添加性能负荷 Tag
                             'Case "potato" : Tags.Add("极低")
                             'Case "low" : Tags.Add("低")
                             'Case "medium" : Tags.Add("中")
                             'Case "high" : Tags.Add("高")
-                            Case "colored-lighting" : Tags.Add("彩色光照")
-                            Case "path-tracing" : Tags.Add("路径追踪")
-                            Case "pbr" : Tags.Add("PBR")
-                            Case "reflections" : Tags.Add("反射")
+                            Case "colored-lighting" : Tags.Add(I18nService.Get("Tag.ColoredLighting"))
+                            Case "path-tracing" : Tags.Add(I18nService.Get("Tag.PathTracing"))
+                            Case "pbr" : Tags.Add(I18nService.Get("Tag.PBR"))
+                            Case "reflections" : Tags.Add(I18nService.Get("Tag.Reflections"))
 
                             Case "iris" : Tags.Add("Iris")
                             Case "optifine" : Tags.Add("OptiFine")
-                            Case "vanilla" : Tags.Add("原版可用")
+                            Case "vanilla" : Tags.Add(I18nService.Get("Tag.VanillaLike"))
                         End Select
                     Next
 #End Region
                 End If
-                If Not Tags.Any() Then Tags.Add("其他")
+                If Not Tags.Any() Then Tags.Add(I18nService.Get("Tag.Other"))
                 Tags.Sort()
                 ModLoaders.Sort()
             End If
@@ -668,7 +682,7 @@ Public Module ModComp
             '获取版本描述
             Dim gameVersionDescription As String
             If Drops Is Nothing OrElse Not Drops.Any() Then
-                gameVersionDescription = "仅快照版本" '#5412
+                gameVersionDescription = I18nService.Get("Download.Comp.SnapshotOnly") '#5412
             Else
                 Dim segments As New List(Of String)
                 Dim isOld As Boolean = False
@@ -695,7 +709,7 @@ Public Module ModComp
                     ElseIf AllDrops?.Any AndAlso startDrop >= AllDrops.First Then
                         If endDrop < 100 Then
                             segments.Clear()
-                            segments.Add("全版本")
+                            segments.Add(I18nService.Get("Download.Comp.AllVersions"))
                             Exit For
                         Else
                             segments.Add(endName & "+")
@@ -718,14 +732,14 @@ Public Module ModComp
             Select Case modLoadersForDesc.Count
                 Case 0
                     If ModLoaders.Count = 1 Then
-                        modLoaderDescriptionFull = "仅 " & ModLoaders.Single.ToString
+                        modLoaderDescriptionFull = I18nService.Fill("Download.Comp.LoaderOnly", ModLoaders.Single.ToString)
                         modLoaderDescriptionPart = ModLoaders.Single.ToString
                     Else
-                        modLoaderDescriptionFull = "未知"
+                        modLoaderDescriptionFull = I18nService.Get("Download.Comp.LoaderUnknown")
                         modLoaderDescriptionPart = ""
                     End If
                 Case 1
-                    modLoaderDescriptionFull = "仅 " & modLoadersForDesc.Single.ToString
+                    modLoaderDescriptionFull = I18nService.Fill("Download.Comp.LoaderOnly", modLoadersForDesc.Single.ToString)
                     modLoaderDescriptionPart = modLoadersForDesc.Single.ToString
                 Case Else
                     Dim newestDrop As Integer = If(Drops.Any, Drops.First, 9999)
@@ -733,7 +747,7 @@ Public Module ModComp
                        (newestDrop < 140 OrElse ModLoaders.Contains(CompLoaderType.Fabric)) AndAlso
                        (newestDrop < 200 OrElse ModLoaders.Contains(CompLoaderType.NeoForge)) AndAlso
                        (newestDrop < 140 OrElse ModLoaders.Contains(CompLoaderType.Quilt) OrElse Setup.Get("ToolDownloadIgnoreQuilt")) Then
-                        modLoaderDescriptionFull = "任意"
+                        modLoaderDescriptionFull = I18nService.Get("Download.Comp.LoaderAny")
                         modLoaderDescriptionPart = ""
                     Else
                         modLoaderDescriptionFull = modLoadersForDesc.Join(" / ")
@@ -782,8 +796,12 @@ Public Module ModComp
                     NewItem.ColumnTime3.Width = New GridLength(0)
                 End If
                 NewItem.LabDownload.Text =
-                    If(DownloadCount > 100000000, Math.Round(DownloadCount / 100000000, 2) & " 亿",
-                        If(DownloadCount > 100000, Math.Floor(DownloadCount / 10000) & " 万", DownloadCount))
+                    If(DownloadCount > 1000000000, Math.Round(DownloadCount / 1000000000, 2) & "B",
+                        If(DownloadCount > 1000000, Math.Round(DownloadCount / 1000000, 2) & "M",
+                            If(DownloadCount > 10000, Math.Floor(DownloadCount / 1000) & "K", DownloadCount
+                            )
+                        )
+                    )
                 Return NewItem
             End Function) With {.Height = 64}
         End Function
@@ -870,7 +888,7 @@ Public Module ModComp
                     '将 "Forge" 等提示改为 "Forge 版"
                     If IsModLoaderDescription AndAlso Not Ex.Contains("版") AndAlso
                         Ex.ToLower.Replace("forge", "").Replace("fabric", "").Replace("quilt", "").Length <= 3 Then
-                        Ex = Ex.Replace("Edition", "").Replace("edition", "").Trim.Capitalize & " 版"
+                        Ex = I18nService.Fill("Download.Comp.Title.Version", Ex.Replace("Edition", "").Replace("edition", "").Trim.Capitalize)
                     End If
                     '将 "forge" 等词语的首字母大写
                     Ex = Ex.Replace("forge", "Forge").Replace("neo", "Neo").Replace("fabric", "Fabric").Replace("quilt", "Quilt")
@@ -1141,7 +1159,7 @@ NoSubtitle:
             Return
         ElseIf Not Request.CanContinue Then
             If Not Request.Storage.Results.Any() Then
-                Throw New Exception("没有符合条件的结果")
+                Throw New Exception(I18nService.Get("Download.Comp.NoResult"))
             Else
                 Log($"[Comp] 已有 {Request.Storage.Results.Count} 个结果，少于所需的 {Request.TargetResultCount} 个结果，但无法继续获取，结束处理")
                 Return
@@ -1151,7 +1169,7 @@ NoSubtitle:
 #Region "拒绝 1.13- Quilt（这个版本根本没有 Quilt）"
 
         If Request.ModLoader = CompLoaderType.Quilt AndAlso CompareVersion(If(Request.GameVersion, "1.15"), "1.14") = -1 Then
-            Throw New Exception("Quilt 不支持 Minecraft " & Request.GameVersion)
+            Throw New Exception(I18nService.Fill("Download.Comp.QuiltNotSupported", Request.GameVersion))
         End If
 
 #End Region
@@ -1186,7 +1204,7 @@ NoSubtitle:
             Next
             '获取搜索结果
             Dim SearchResults = Search(SearchEntries, Request.SearchText, 3)
-            If Not SearchResults.Any() Then Throw New Exception("无搜索结果，请尝试搜索英文名称")
+            If Not SearchResults.Any() Then Throw New Exception(I18nService.Get("Download.Comp.NoResultEnglish"))
             Dim SearchResult As String = ""
             For i = 0 To Math.Min(4, SearchResults.Count - 1) '就算全是准确的，也最多只要 5 个
                 If Not SearchResults(i).AbsoluteRight AndAlso i >= Math.Min(2, SearchResults.Count - 1) Then Exit For '把 3 个结果拼合以提高准确度
@@ -1340,23 +1358,23 @@ Retry:
                     Throw [Error]
                 Else
                     If IsChineseSearch AndAlso Not (Request.Type = CompType.Mod OrElse Request.Type = CompType.DataPack) Then
-                        Throw New Exception("没有搜索结果，请尝试使用英文搜索")
+                        Throw New Exception(I18nService.Get("Download.Comp.NoResultEnglish"))
                     ElseIf Request.Source = CompSourceType.CurseForge AndAlso Request.Tag.StartsWithF("/") Then
-                        Throw New Exception("CurseForge 不兼容所选的类型")
+                        Throw New Exception(I18nService.Fill("Download.Comp.SourceIncompatible", "CurseForge"))
                     ElseIf Request.Source = CompSourceType.Modrinth AndAlso Request.Tag.EndsWithF("/") Then
-                        Throw New Exception("Modrinth 不兼容所选的类型")
+                        Throw New Exception(I18nService.Fill("Download.Comp.SourceIncompatible", "Modrinth"))
                     Else
-                        Throw New Exception("没有搜索结果")
+                        Throw New Exception(I18nService.Get("Download.Comp.Error.NoResult"))
                     End If
                 End If
             ElseIf [Error] IsNot Nothing Then
-                '有结果但是有错误
-                If CurseForgeFailed Then
-                    Storage.ErrorMessage = $"无法连接到 CurseForge，所以目前仅显示了来自 Modrinth 的内容，搜索结果可能不全。{vbCrLf}请稍后重试，或使用 VPN 以改善网络环境。"
-                Else
-                    Storage.ErrorMessage = $"无法连接到 Modrinth，所以目前仅显示了来自 CurseForge 的内容，搜索结果可能不全。{vbCrLf}请稍后重试，或使用 VPN 以改善网络环境。"
+                    '有结果但是有错误
+                    If CurseForgeFailed Then
+                        Storage.ErrorMessage = I18nService.Fill("Download.Comp.Error.ConnectionFailed", "CurseForge", "Modrinth")
+                    Else
+                        Storage.ErrorMessage = I18nService.Fill("Download.Comp.Error.ConnectionFailed", "Modrinth", "CurseForge")
+                    End If
                 End If
-            End If
 
         Finally
             CurseForgeThread?.Interrupt()
@@ -1510,11 +1528,11 @@ Retry:
             Get
                 Select Case Status
                     Case CompFileStatus.Release
-                        Return "正式版"
+                        Return I18nService.Get("Download.Comp.Status.Release")
                     Case CompFileStatus.Beta
-                        Return If(ModeDebug, "Beta 版", "测试版")
+                        Return If(ModeDebug, I18nService.Get("Download.Comp.Status.Beta"), I18nService.Get("Download.Comp.Status.BetaTest"))
                     Case Else
-                        Return If(ModeDebug, "Alpha 版", "早期测试版")
+                        Return If(ModeDebug, I18nService.Get("Download.Comp.Status.Alpha"), I18nService.Get("Download.Comp.Status.AlphaTest"))
                 End Select
             End Get
         End Property
@@ -1627,14 +1645,14 @@ Retry:
                     End If
                     'GameVersions
                     Dim RawVersions As List(Of String) = Data("gameVersions").Select(Function(t) t.ToString.Trim.ToLower).ToList
-                    GameVersions = RawVersions.Where(Function(v) McInstanceInfo.IsFormatFit(v)).Select(Function(v) v.Replace("-snapshot", " 预览版")).ToList
+                    GameVersions = RawVersions.Where(Function(v) McInstanceInfo.IsFormatFit(v)).Select(Function(v) v.Replace("-snapshot", I18nService.Get("Download.Comp.Version.Preview"))).ToList
                     If GameVersions.Count > 1 Then
                         GameVersions = GameVersions.Sort(AddressOf CompareVersionGe).ToList
                         If Type = CompType.ModPack Then GameVersions = New List(Of String) From {GameVersions(0)} '整合包理应只 "支持" 一个版本
                     ElseIf GameVersions.Count = 1 Then
                         GameVersions = GameVersions.ToList
                     Else
-                        GameVersions = New List(Of String) From {"未知版本"}
+                        GameVersions = New List(Of String) From {I18nService.Get("Download.Comp.Version.Unknown")}
                     End If
                     'ModLoaders
                     ModLoaders = New List(Of CompLoaderType)
@@ -1694,7 +1712,7 @@ Retry:
                     'GameVersions
                     Dim RawVersions As List(Of String) = Data("game_versions").Select(Function(t) t.ToString.Trim.ToLower).ToList
                     GameVersions = RawVersions.Where(Function(v) v.Contains(".")).
-                        Select(Function(v) If(v.Contains("-"), v.BeforeFirst("-") & " 预览版", If(v.StartsWithF("b1."), "远古版本", v))).ToList
+                        Select(Function(v) If(v.Contains("-"), v.BeforeFirst("-") & I18nService.Get("Download.Comp.Version.Preview"), If(v.StartsWithF("b1."), I18nService.Get("Download.Comp.Version.Ancient"), v))).ToList
                     If GameVersions.Count > 1 Then
                         GameVersions = GameVersions.Sort(AddressOf CompareVersionGe).ToList
                         If Type = CompType.ModPack Then GameVersions = New List(Of String) From {GameVersions(0)} '整合包理应只 “支持” 一个版本
@@ -1703,7 +1721,7 @@ Retry:
                     ElseIf RawVersions.Any(Function(v) RegexCheck(v, "[0-9]{2}w[0-9]{2}[a-z]")) Then
                         GameVersions = RawVersions.Where(Function(v) RegexCheck(v, "[0-9]{2}w[0-9]{2}[a-z]")).ToList
                     Else
-                        GameVersions = New List(Of String) From {"未知版本"}
+                        GameVersions = New List(Of String) From {I18nService.Get("Download.Comp.Version.Unknown")}
                     End If
 #End Region
                 End If
@@ -1754,15 +1772,16 @@ Retry:
                 Dim Title As String = If(BadDisplayName, FileName, DisplayName)
                 Dim Info As New List(Of String)
                 If Title <> FileName.BeforeLast(".") Then Info.Add(FileName.BeforeLast("."))
-                If Dependencies.Any Then Info.Add(Dependencies.Count & " 项前置")
+                If Dependencies.Any Then Info.Add(I18nService.Fill("Download.Comp.File.DependenciesCount", Dependencies.Count))
                 If GameVersions.All(
                 Function(VerName)
                     Return Not VerName.Contains(".") OrElse {"w", "snapshot", "rc", "pre", "experimental", "-"}.Any(Function(s) VerName.ContainsF(s, True))
-                End Function) Then Info.Add($"游戏版本 {Join(GameVersions, "、")}")
+                End Function) Then Info.Add(I18nService.Fill("Download.Comp.File.GameVersions", Join(GameVersions, " ")))
                 If DownloadCount > 0 Then 'CurseForge 的下载次数经常错误地返回 0
-                    Info.Add("下载 " & If(DownloadCount > 100000, Math.Round(DownloadCount / 10000) & " 万次", DownloadCount & " 次"))
+                    Info.Add(I18nService.Fill("Download.Comp.File.DownloadCount", If(DownloadCount > 10000, Math.Round(DownloadCount / 1000) & "K", DownloadCount)))
                 End If
-                Info.Add("更新于 " & TimeUtils.GetTimeSpanString(ReleaseDate - Date.Now, False))
+                ' Info.Add("更新于 " & TimeUtils.GetTimeSpanString(ReleaseDate - Date.Now, False))
+                Info.Add(I18nService.Fill("Download.Comp.File.ReleaseDateDelta", TimeUtils.GetTimeSpanString(ReleaseDate - Date.Now, False, True)))
                 If Status <> CompFileStatus.Release Then Info.Add(StatusDescription)
 
                 '建立控件
@@ -1892,6 +1911,25 @@ Retry:
                 Next
             Next
         End If
+        '更新前置信息
+        If Deps.Any Then
+            For Each DepProject In Deps.Where(Function(id) CompProjectCache.ContainsKey(id)).Select(Function(id) CompProjectCache(id))
+                For Each File In CompFilesCache(ProjectId)
+                    If File.RawDependencies.Contains(DepProject.Id) AndAlso DepProject.Id <> ProjectId Then
+                        If Not File.Dependencies.Contains(DepProject.Id) Then File.Dependencies.Add(DepProject.Id)
+                    End If
+                Next
+            Next
+        End If
+        If OptionalDeps.Any Then
+            For Each DepProject In OptionalDeps.Where(Function(id) CompProjectCache.ContainsKey(id)).Select(Function(id) CompProjectCache(id))
+                For Each File In CompFilesCache(ProjectId)
+                    If File.RawOptionalDependencies.Contains(DepProject.Id) AndAlso DepProject.Id <> ProjectId Then
+                        If Not File.OptionalDependencies.Contains(DepProject.Id) Then File.OptionalDependencies.Add(DepProject.Id)
+                    End If
+                Next
+            Next
+        End If
         Return CompFilesCache(ProjectId)
     End Function
 
@@ -1913,7 +1951,7 @@ Retry:
                 Return CompProjectCache.ContainsKey(dep)
             End Function).ToList
             '添加开头间隔
-            Stack.Children.Add(New TextBlock With {.Text = "必要前置资源", .FontSize = 14, .HorizontalAlignment = HorizontalAlignment.Left, .Margin = New Thickness(6, 2, 0, 5)})
+            Stack.Children.Add(New TextBlock With {.Text = I18nService.Get("Download.Comp.Info.RequiredDeps"), .FontSize = 14, .HorizontalAlignment = HorizontalAlignment.Left, .Margin = New Thickness(6, 2, 0, 5)})
             '添加前置列表
             For Each Dep In Deps
                 Dim Item = CompProjectCache(Dep).ToCompItem(False, False)
@@ -1929,7 +1967,7 @@ Retry:
                     Return CompProjectCache.ContainsKey(dep)
                 End Function).ToList
             '添加开头间隔
-            Stack.Children.Add(New TextBlock With {.Text = "可选前置资源", .FontSize = 14, .HorizontalAlignment = HorizontalAlignment.Left, .Margin = New Thickness(6, 2, 0, 5)})
+            Stack.Children.Add(New TextBlock With {.Text = I18nService.Get("Download.Comp.Info.OptionalDeps"), .FontSize = 14, .HorizontalAlignment = HorizontalAlignment.Left, .Margin = New Thickness(6, 2, 0, 5)})
             '添加前置列表
             For Each Dep In OptionalDeps
                 Dim Item = CompProjectCache(Dep).ToCompItem(False, False)
@@ -1937,7 +1975,7 @@ Retry:
             Next
         End If
         '添加结尾间隔
-        Stack.Children.Add(New TextBlock With {.Text = "版本列表", .FontSize = 14, .HorizontalAlignment = HorizontalAlignment.Left, .Margin = New Thickness(6, 12, 0, 5)})
+        Stack.Children.Add(New TextBlock With {.Text = I18nService.Get("Download.Comp.VersionList"), .FontSize = 14, .HorizontalAlignment = HorizontalAlignment.Left, .Margin = New Thickness(6, 12, 0, 5)})
     End Sub
 
 #End Region
@@ -1975,20 +2013,20 @@ Retry:
                 Item.MaxWidth = 240
                 Dim HasFavs As Boolean = i.Favs.Contains(Project.Id)
                 If HasFavs Then
-                    Item.Header = $"取消收藏 {i.Name}"
+                    Item.Header = I18nService.Fill("Download.Comp.Fav.Cancel", i.Name)
                     Item.Icon = Logo.IconButtonLikeFill
                 Else
-                    Item.Header = $"收藏到 {i.Name}"
+                    Item.Header = I18nService.Fill("Download.Comp.Fav.Add", i.Name)
                     Item.Icon = Logo.IconButtonLikeLine
                 End If
                 AddHandler Item.Click, Sub()
                                            Try
                                                If HasFavs Then
                                                    i.Favs.Remove(Project.Id)
-                                                   Hint($"已将 {Project.TranslatedName} 从 {i.Name} 中删除", HintType.Finish)
+                                                   Hint(I18nService.Fill("Download.Comp.Fav.Removed", Project.TranslatedName, i.Name), HintType.Finish)
                                                Else
                                                    i.Favs.Add(Project.Id)
-                                                   Hint($"已将 {Project.TranslatedName} 添加到 {i.Name} 中", HintType.Finish)
+                                                   Hint(I18nService.Fill("Download.Comp.Fav.Added", Project.TranslatedName, i.Name), HintType.Finish)
                                                End If
                                                Save()
                                            Catch ex As Exception
@@ -2012,7 +2050,7 @@ Retry:
             For Each i In FavoritesList
                 Dim Item As New MyMenuItem With {
                     .MaxWidth = 240,
-                    .Header = $"收藏到 {i.Name}"
+                    .Header = I18nService.Fill("Download.Comp.Fav.Add", i.Name)
                 }
                 AddHandler Item.Click, Sub()
                                            Try
@@ -2021,7 +2059,7 @@ Retry:
                                                Save()
                                                Dim SuccessCount As Integer = i.Favs.Count - Count
                                                Dim FailedCount As Integer = Project.Count - SuccessCount
-                                               Hint($"已将 {SuccessCount} 个资源添加到 {i.Name} 中{If(FailedCount > 0, $"，{FailedCount} 个资源已添加", "")}！", HintType.Finish)
+                                               Hint(String.Format(I18nService.Get("Download.Comp.Fav.BatchAdded"), SuccessCount, i.Name, If(FailedCount > 0, ", " & I18nService.Fill("Download.Comp.Fav.Skipped", FailedCount), "")), HintType.Finish)
                                            Catch ex As Exception
                                                Log(ex, "[CompFavorites] 改变收藏项出错")
                                            End Try
@@ -2075,11 +2113,11 @@ Retry:
                     End Try
                     If Migrate IsNot Nothing Then
                         RawList = New List(Of FavData)
-                        RawList.Add(GetNewFav("默认", Migrate))
+                        RawList.Add(GetNewFav(I18nService.Get("Download.Comp.Fav.Default"), Migrate))
                     Else
                         RawList = JArray.Parse(RawData).ToObject(Of List(Of FavData))
                         If RawList.Count = 0 Then
-                            RawList.Add(GetNewFav("默认", Nothing)) ' 确保无论如何都要至少有一个
+                            RawList.Add(GetNewFav(I18nService.Get("Download.Comp.Fav.Default"), Nothing)) ' 确保无论如何都要至少有一个
                         End If
                     End If
                     _FavoritesList = RawList
@@ -2292,8 +2330,8 @@ Retry:
                     Log("[Clipboard] 剪贴板资源 ProjectId: " + ProjectId)
 
                     RunInUi(Sub()
-                        If MyMsgBox("PCL 在剪贴板中识别到了资源链接，是否要跳转到该资源的详细信息页面？", "识别到剪贴板资源", "确定", "取消", ForceWait:=True) = 1 Then
-                            Hint("正在获取资源信息，请稍等...")
+                        If MyMsgBox(I18nService.Get("Download.Comp.Clipboard.Ask"), I18nService.Get("Download.Comp.Clipboard.Title"), I18nService.Get("General.Ok"), I18nService.Get("General.Cancel"), ForceWait:=True) = 1 Then
+                            Hint(I18nService.Get("Download.Comp.Clipboard.Getting"))
                             Dim Ids As New List(Of String)({ProjectId})
                             Dim CompProjects = CompRequest.GetCompProjectsByIds(Ids)
                             FrmMain.PageChange(New FormMain.PageStackData With {.Page = FormMain.PageType.CompDetail,

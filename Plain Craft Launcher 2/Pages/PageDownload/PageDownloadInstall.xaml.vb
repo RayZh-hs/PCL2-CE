@@ -79,7 +79,7 @@ Public Class PageDownloadInstall
 
         If Not Setup.Get("HintInstallBack") Then
             Setup.Set("HintInstallBack", True)
-            Hint("点击 Minecraft 项即可返回游戏主版本选择页面！")
+            Hint(PCL.Core.App.I18nService.Get("Download.Install.Hint.Back"))
         End If
 
         '如果在选择页面按了刷新键，选择页的东西可能会由于动画被隐藏，但不会由于加载结束而再次显示，因此这里需要手动恢复
@@ -247,6 +247,7 @@ Public Class PageDownloadInstall
     Private SelectedLabyModChannel As String = Nothing
     Private SelectedLabyModCommitRef As String = Nothing
     Private SelectedLabyModVersion As String = Nothing
+    Private SelectedLabyModRawVersion As String = Nothing
 
     'OptiFabric
     Private SelectedOptiFabric As CompFile = Nothing
@@ -670,7 +671,7 @@ Public Class PageDownloadInstall
             name += "-Quilt_" & SelectedQuilt
         End If
         If SelectedLabyModVersion IsNot Nothing Then
-            name += "-LabyMod_" & SelectedLabyModVersion.Replace(" 稳定版", "_Production").Replace(" 快照版", "_Snapshot")
+            name += "-LabyMod_" & SelectedLabyModRawVersion & If(SelectedLabyModChannel = "snapshot", "_Snapshot", "_Production")
         End If
         If SelectedForge IsNot Nothing Then
             name += "-Forge_" & SelectedForge.VersionName
@@ -821,7 +822,7 @@ Public Class PageDownloadInstall
                 MinecraftSelected(Item, Nothing)
             Next
         Catch ex As Exception
-            Log(ex, "可视化安装版本列表出错", LogLevel.Feedback)
+            Log(ex, PCL.Core.App.I18nService.Get("Download.Install.Error.VisualizeFailed"), LogLevel.Feedback)
         End Try
     End Sub
     ''' <summary>
@@ -837,18 +838,18 @@ Public Class PageDownloadInstall
     ''' 获取 OptiFine 的加载异常信息。若正常则返回 Nothing。
     ''' </summary>
     Private Function LoadOptiFineGetError() As String
-        If SelectedLoaderName = "NeoForge" OrElse SelectedLoaderName = "Quilt" OrElse SelectedLoaderName = "LabyMod" Then Return $"与 {SelectedLoaderName} 不兼容"
+        If SelectedLoaderName = "NeoForge" OrElse SelectedLoaderName = "Quilt" OrElse SelectedLoaderName = "LabyMod" Then Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Incompatible"), SelectedLoaderName)
         If LoadOptiFine Is Nothing OrElse LoadOptiFine.State.LoadingState = MyLoading.MyLoadingState.Run Then Return PCL.Core.App.I18nService.Get("Download.VersionList.Loading")
         If LoadOptiFine.State.LoadingState = MyLoading.MyLoadingState.Error Then Return PCL.Core.App.I18nService.Get("Download.VersionList.Failed") & CType(LoadOptiFine.State, Object).Error.Message
         '是否有 Cleanroom
-        If SelectedCleanroom IsNot Nothing Then Return "与 Cleanroom 不兼容"
+        If SelectedCleanroom IsNot Nothing Then Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Incompatible"), "Cleanroom")
         '检查 Forge 1.13 - 1.14.3：全部不兼容
         If SelectedLoaderName = "Forge" AndAlso
            CompareVersion(_vanillaName, "1.13") >= 0 AndAlso CompareVersion("1.14.3", _vanillaName) >= 0 Then
-            Return "与 Forge 不兼容"
+            Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Incompatible"), "Forge")
         End If
         '检查 Fabric 1.20.5+: 全部不兼容
-        If SelectedFabric IsNot Nothing AndAlso CompareVersion(_vanillaName, "1.20.4") > 0 Then Return "与 Fabric 不兼容"
+        If SelectedFabric IsNot Nothing AndAlso CompareVersion(_vanillaName, "1.20.4") > 0 Then Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Incompatible"), "Fabric")
         '检查 Loader
         If GetLoaderError(LoadOptiFine) IsNot Nothing Then Return GetLoaderError(LoadOptiFine)
         '检查 Forge 版本
@@ -862,11 +863,11 @@ Public Class PageDownloadInstall
             If OptiFineVersion.RequiredForgeVersion IsNot Nothing Then HasRequiredVersion = True
         Next
         If Not HasAny Then
-            Return "无可用版本"
+            Return PCL.Core.App.I18nService.Get("Download.VersionList.NoVersion")
         ElseIf HasRequiredVersion Then
-            Return "仅兼容特定版本的 Forge"
+            Return PCL.Core.App.I18nService.Get("Download.Install.Error.ForgeVersionLimited")
         Else
-            Return "与 Forge 不兼容"
+            Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Incompatible"), "Forge")
         End If
     End Function
 
@@ -950,7 +951,7 @@ Public Class PageDownloadInstall
         '检查 Loader
         If GetLoaderError(LoadLiteLoader) IsNot Nothing Then Return GetLoaderError(LoadLiteLoader)
         '检查版本
-        Return If(DlLiteLoaderListLoader.Output.Value.Any(Function(v) v.Inherit = _vanillaName), Nothing, "无可用版本")
+        Return If(DlLiteLoaderListLoader.Output.Value.Any(Function(v) v.Inherit = _vanillaName), Nothing, PCL.Core.App.I18nService.Get("Download.VersionList.NoVersion"))
     End Function
 
     '限制展开
@@ -1001,24 +1002,24 @@ Public Class PageDownloadInstall
     ''' 获取 Forge 的加载异常信息。若正常则返回 Nothing。
     ''' </summary>
     Private Function LoadForgeGetError() As String
-        If CompareVersionGE("1.5.1", _vanillaName) AndAlso CompareVersionGE(_vanillaName, "1.1") Then Return "无可用版本"
+        If CompareVersionGE("1.5.1", _vanillaName) AndAlso CompareVersionGE(_vanillaName, "1.1") Then Return PCL.Core.App.I18nService.Get("Download.VersionList.NoVersion")
         '检查 Loader
         If GetLoaderError(LoadForge) IsNot Nothing Then Return GetLoaderError(LoadForge)
         Dim loader As LoaderTask(Of String, List(Of DlForgeVersionEntry)) = LoadForge.State
-        If _vanillaName <> loader.Input Then Return "获取中……"
+        If _vanillaName <> loader.Input Then Return PCL.Core.App.I18nService.Get("Download.VersionList.Fetching")
         '检查版本
         For Each Version In loader.Output
             If Version.Category = "universal" OrElse Version.Category = "client" Then Continue For '跳过无法自动安装的版本
-            If SelectedNeoForge IsNot Nothing Then Return "与 NeoForge 不兼容"
-            If SelectedFabric IsNot Nothing Then Return "与 Fabric 不兼容"
+            If SelectedNeoForge IsNot Nothing Then Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Incompatible"), "NeoForge")
+            If SelectedFabric IsNot Nothing Then Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Incompatible"), "Fabric")
             If SelectedOptiFine IsNot Nothing AndAlso
                CompareVersionGE(_vanillaName, "1.13") AndAlso CompareVersionGE("1.14.3", _vanillaName) Then
-                Return "与 OptiFine 不兼容" '1.13 ~ 1.14.3 OptiFine 检查
+                Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Incompatible"), "OptiFine")
             End If
             If SelectedOptiFine IsNot Nothing AndAlso Not IsOptiFineSuitForForge(SelectedOptiFine, Version) Then Continue For
             Return Nothing
         Next
-        Return "与 OptiFine 不兼容"
+        Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Incompatible"), "OptiFine")
     End Function
 
     '限制展开
@@ -1080,12 +1081,12 @@ Public Class PageDownloadInstall
     ''' 获取 NeoForge 的加载异常信息。若正常则返回 Nothing。
     ''' </summary>
     Private Function LoadNeoForgeGetError() As String
-        If SelectedOptiFine IsNot Nothing Then Return "与 OptiFine 不兼容"
-        If SelectedLoaderName IsNot Nothing AndAlso SelectedLoaderName IsNot "NeoForge" Then Return $"与 {SelectedLoaderName} 不兼容"
+        If SelectedOptiFine IsNot Nothing Then Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Incompatible"), "OptiFine")
+        If SelectedLoaderName IsNot Nothing AndAlso SelectedLoaderName IsNot "NeoForge" Then Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Incompatible"), SelectedLoaderName)
         '检查 Loader
         If GetLoaderError(LoadNeoForge) IsNot Nothing Then Return GetLoaderError(LoadNeoForge)
         '检查版本
-        Return If(DlNeoForgeListLoader.Output.Value.Any(Function(v) v.Inherit = _vanillaName), Nothing, "无可用版本")
+        Return If(DlNeoForgeListLoader.Output.Value.Any(Function(v) v.Inherit = _vanillaName), Nothing, PCL.Core.App.I18nService.Get("Download.VersionList.NoVersion"))
     End Function
 
     '限制展开
@@ -1138,13 +1139,13 @@ Public Class PageDownloadInstall
     ''' 获取 Cleanroom 的加载异常信息。若正常则返回 Nothing。
     ''' </summary>
     Private Function LoadCleanroomGetError() As String
-        If Not _vanillaName.StartsWith("1.") Then Return "没有可用版本"
-        If SelectedOptiFine IsNot Nothing Then Return "与 OptiFine 不兼容"
-        If SelectedLoaderName IsNot Nothing AndAlso SelectedLoaderName IsNot "Cleanroom" Then Return $"与 {SelectedLoaderName} 不兼容"
+        If Not _vanillaName.StartsWith("1.") Then Return PCL.Core.App.I18nService.Get("Download.VersionList.NoVersion")
+        If SelectedOptiFine IsNot Nothing Then Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Incompatible"), "OptiFine")
+        If SelectedLoaderName IsNot Nothing AndAlso SelectedLoaderName IsNot "Cleanroom" Then Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Incompatible"), SelectedLoaderName)
         '检查 Loader
         If GetLoaderError(LoadNeoForge) IsNot Nothing Then Return GetLoaderError(LoadNeoForge)
         '检查版本
-        Return If(DlNeoForgeListLoader.Output.Value.Any(Function(v) v.Inherit = _vanillaName), Nothing, "无可用版本")
+        Return If(DlNeoForgeListLoader.Output.Value.Any(Function(v) v.Inherit = _vanillaName), Nothing, PCL.Core.App.I18nService.Get("Download.VersionList.NoVersion"))
     End Function
 
     '限制展开
@@ -1198,17 +1199,17 @@ Public Class PageDownloadInstall
     ''' </summary>
     Private Function LoadFabricGetError() As String
         '检查 OptiFine 1.20.5+：没有 OptiFabric 故全部不兼容
-        If SelectedOptiFine IsNot Nothing AndAlso CompareVersionGE(_vanillaName, "1.20.5") Then Return "与 OptiFine 不兼容"
+        If SelectedOptiFine IsNot Nothing AndAlso CompareVersionGE(_vanillaName, "1.20.5") Then Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Incompatible"), "OptiFine")
         '检查 Loader
         If GetLoaderError(LoadFabric) IsNot Nothing Then Return GetLoaderError(LoadFabric)
         '检查版本
         For Each version As JObject In DlFabricListLoader.Output.Value("game")
             If version("version").ToString = _vanillaName.Replace("∞", "infinite").Replace("Combat Test 7c", "1.16_combat-3") Then
-                If SelectedLoaderName IsNot Nothing AndAlso SelectedLoaderName IsNot "Fabric" Then Return $"与 {SelectedLoaderName} 不兼容"
+                If SelectedLoaderName IsNot Nothing AndAlso SelectedLoaderName IsNot "Fabric" Then Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Incompatible"), SelectedLoaderName)
                 Return Nothing
             End If
         Next
-        Return "无可用版本"
+        Return PCL.Core.App.I18nService.Get("Download.VersionList.NoVersion")
     End Function
 
     '限制展开
@@ -1312,17 +1313,17 @@ Public Class PageDownloadInstall
     Private Function LoadFabricApiGetError() As String
         If LoadLegacyFabricApi Is Nothing OrElse LoadLegacyFabricApi.State.LoadingState = MyLoading.MyLoadingState.Run Then Return PCL.Core.App.I18nService.Get("Download.VersionList.Loading")
         If LoadLegacyFabricApi.State.LoadingState = MyLoading.MyLoadingState.Error Then Return PCL.Core.App.I18nService.Get("Download.VersionList.Failed") & CType(LoadLegacyFabricApi.State, Object).Error.Message
-        If SelectedAPIName IsNot Nothing AndAlso SelectedAPIName IsNot "Legacy Fabric API" Then Return $"与 {SelectedAPIName} 不兼容"
+        If SelectedAPIName IsNot Nothing AndAlso SelectedAPIName IsNot "Legacy Fabric API" Then Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Incompatible"), SelectedAPIName)
         If DlLegacyFabricApiLoader.Output Is Nothing Then
-            If SelectedLegacyFabric Is Nothing Then Return "需要安装 LegacyFabric"
+            If SelectedLegacyFabric Is Nothing Then Return PCL.Core.App.I18nService.Get("Download.Install.Error.RequireLegacyFabric")
             Return PCL.Core.App.I18nService.Get("Download.VersionList.Loading")
         End If
         For Each Version In DlLegacyFabricApiLoader.Output
             If Not IsSuitableLegacyFabricApi(Version.GameVersions, _vanillaName) Then Continue For
-            If SelectedLegacyFabric Is Nothing Then Return "需要安装 LegacyFabric"
+            If SelectedLegacyFabric Is Nothing Then Return PCL.Core.App.I18nService.Get("Download.Install.Error.RequireLegacyFabric")
             Return Nothing
         Next
-        Return "无可用版本"
+        Return PCL.Core.App.I18nService.Get("Download.VersionList.NoVersion")
     End Function
 
     '限制展开
@@ -1358,7 +1359,7 @@ Public Class PageDownloadInstall
                 PanFabricApi.Children.Add(FabricApiDownloadListItem(Version, AddressOf FabricApi_Selected))
             Next
             '自动选择 Fabric API
-            If (Not AutoSelectedFabricApi AndAlso SelectedQuilt Is Nothing) OrElse (SelectedQuilt IsNot Nothing AndAlso LoadQSLGetError() Is "没有可用版本") Then
+            If (Not AutoSelectedFabricApi AndAlso SelectedQuilt Is Nothing) OrElse (SelectedQuilt IsNot Nothing AndAlso LoadQSLGetError() = PCL.Core.App.I18nService.Get("Download.VersionList.NoVersion")) Then
                 AutoSelectedFabricApi = True
                 Log($"[Download] 已自动选择 Fabric API：{CType(PanFabricApi.Children(0), MyListItem).Title}")
                 FabricApi_Selected(PanFabricApi.Children(0), Nothing)
@@ -1395,12 +1396,12 @@ Public Class PageDownloadInstall
         If LoadLegacyFabric.State.LoadingState = MyLoading.MyLoadingState.Error Then Return PCL.Core.App.I18nService.Get("Download.VersionList.Failed") & CType(LoadLegacyFabric.State, Object).Error.Message
         For Each Version As JObject In DlLegacyFabricListLoader.Output.Value("game")
             If Version("version").ToString = _vanillaName Then
-                If SelectedLiteLoader IsNot Nothing Then Return "与 LiteLoader 不兼容"
-                If SelectedLoaderName IsNot Nothing AndAlso SelectedLoaderName IsNot "LegacyFabric" Then Return $"与 {SelectedLoaderName} 不兼容"
+                If SelectedLiteLoader IsNot Nothing Then Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Incompatible"), "LiteLoader")
+                If SelectedLoaderName IsNot Nothing AndAlso SelectedLoaderName IsNot "LegacyFabric" Then Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Incompatible"), SelectedLoaderName)
                 Return Nothing
             End If
         Next
-        Return "无可用版本"
+        Return PCL.Core.App.I18nService.Get("Download.VersionList.NoVersion")
     End Function
 
     '限制展开
@@ -1476,17 +1477,17 @@ Public Class PageDownloadInstall
     Private Function LoadLegacyFabricApiGetError() As String
         If LoadLegacyFabricApi Is Nothing OrElse LoadLegacyFabricApi.State.LoadingState = MyLoading.MyLoadingState.Run Then Return PCL.Core.App.I18nService.Get("Download.VersionList.Loading")
         If LoadLegacyFabricApi.State.LoadingState = MyLoading.MyLoadingState.Error Then Return PCL.Core.App.I18nService.Get("Download.VersionList.Failed") & CType(LoadLegacyFabricApi.State, Object).Error.Message
-        If SelectedAPIName IsNot Nothing AndAlso SelectedAPIName IsNot "Legacy Fabric API" Then Return $"与 {SelectedAPIName} 不兼容"
+        If SelectedAPIName IsNot Nothing AndAlso SelectedAPIName IsNot "Legacy Fabric API" Then Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Incompatible"), SelectedAPIName)
         If DlLegacyFabricApiLoader.Output Is Nothing Then
-            If SelectedLegacyFabric Is Nothing Then Return "需要安装 LegacyFabric"
+            If SelectedLegacyFabric Is Nothing Then Return PCL.Core.App.I18nService.Get("Download.Install.Error.RequireLegacyFabric")
             Return PCL.Core.App.I18nService.Get("Download.VersionList.Loading")
         End If
         For Each Version In DlLegacyFabricApiLoader.Output
             If Not IsSuitableLegacyFabricApi(Version.GameVersions, _vanillaName) Then Continue For
-            If SelectedLegacyFabric Is Nothing Then Return "需要安装 LegacyFabric"
+            If SelectedLegacyFabric Is Nothing Then Return PCL.Core.App.I18nService.Get("Download.Install.Error.RequireLegacyFabric")
             Return Nothing
         Next
-        Return "无可用版本"
+        Return PCL.Core.App.I18nService.Get("Download.VersionList.NoVersion")
     End Function
 
     '限制展开
@@ -1551,18 +1552,18 @@ Public Class PageDownloadInstall
     ''' 获取 Quilt 的加载异常信息。若正常则返回 Nothing。
     ''' </summary>
     Private Function LoadQuiltGetError() As String
-        If SelectedOptiFine IsNot Nothing Then Return "与 OptiFine 不兼容"
-        If SelectedLoaderName IsNot Nothing AndAlso SelectedLoaderName IsNot "Quilt" Then Return $"与 {SelectedLoaderName} 不兼容"
+        If SelectedOptiFine IsNot Nothing Then Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Incompatible"), "OptiFine")
+        If SelectedLoaderName IsNot Nothing AndAlso SelectedLoaderName IsNot "Quilt" Then Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Incompatible"), SelectedLoaderName)
         '检查 Loader
         If GetLoaderError(LoadQuilt) IsNot Nothing Then Return GetLoaderError(LoadQuilt)
         '检查版本
         For Each version As JObject In DlFabricListLoader.Output.Value("game")
             If version("version").ToString = _vanillaName.Replace("∞", "infinite").Replace("Combat Test 7c", "1.16_combat-3") Then
-                If SelectedLoaderName IsNot Nothing AndAlso SelectedLoaderName IsNot "Fabric" Then Return $"与 {SelectedLoaderName} 不兼容"
+                If SelectedLoaderName IsNot Nothing AndAlso SelectedLoaderName IsNot "Fabric" Then Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Incompatible"), SelectedLoaderName)
                 Return Nothing
             End If
         Next
-        Return "无可用版本"
+        Return PCL.Core.App.I18nService.Get("Download.VersionList.NoVersion")
     End Function
 
     '限制展开
@@ -1639,17 +1640,17 @@ Public Class PageDownloadInstall
     Private Function LoadQSLGetError() As String
         If LoadQSL Is Nothing OrElse LoadQSL.State.LoadingState = MyLoading.MyLoadingState.Run Then Return PCL.Core.App.I18nService.Get("Download.VersionList.Fetching")
         If LoadQSL.State.LoadingState = MyLoading.MyLoadingState.Error Then Return PCL.Core.App.I18nService.Get("Download.VersionList.Failed") & CType(LoadQSL.State, Object).Error.Message
-        If SelectedAPIName IsNot Nothing AndAlso SelectedAPIName IsNot "QFAPI / QSL" Then Return $"与 {SelectedAPIName} 不兼容"
+        If SelectedAPIName IsNot Nothing AndAlso SelectedAPIName IsNot "QFAPI / QSL" Then Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Incompatible"), SelectedAPIName)
         If DlQSLLoader.Output Is Nothing Then
-            If SelectedQuilt Is Nothing Then Return "需要安装 Quilt"
+            If SelectedQuilt Is Nothing Then Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Require"), "Quilt")
             Return PCL.Core.App.I18nService.Get("Download.VersionList.Fetching")
         End If
         For Each Version In DlQSLLoader.Output
             If Not IsSuitableQSL(Version.GameVersions, _vanillaName) Then Continue For
-            If SelectedQuilt Is Nothing Then Return "需要安装 Quilt"
+            If SelectedQuilt Is Nothing Then Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Require"), "Quilt")
             Return Nothing
         Next
-        Return "没有可用版本"
+        Return PCL.Core.App.I18nService.Get("Download.VersionList.NoVersion")
     End Function
 
     '限制展开
@@ -1732,24 +1733,24 @@ Public Class PageDownloadInstall
     ''' 获取 OptiFabric 的加载异常信息。若正常则返回 Nothing。
     ''' </summary>
     Private Function LoadOptiFabricGetError() As String
-        If VanillaDrop >= 140 AndAlso VanillaDrop <= 150 Then Return "不兼容老版本 Fabric，请手动下载 OptiFabric Origins"
+        If VanillaDrop >= 140 AndAlso VanillaDrop <= 150 Then Return PCL.Core.App.I18nService.Get("Download.VersionList.OptiFabric.OldFabric")
         '检查 Loader
         If GetLoaderError(LoadOptiFabric) IsNot Nothing Then Return GetLoaderError(LoadOptiFabric)
         '检查版本
         If DlOptiFabricLoader.Output Is Nothing Then
-            If SelectedFabric Is Nothing AndAlso SelectedOptiFine Is Nothing Then Return "需要安装 OptiFine 与 Fabric"
-            If SelectedFabric Is Nothing Then Return "需要安装 Fabric"
-            If SelectedOptiFine Is Nothing Then Return "需要安装 OptiFine"
-            Return "获取中……"
+            If SelectedFabric Is Nothing AndAlso SelectedOptiFine Is Nothing Then Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Require2"), "OptiFine", "Fabric")
+            If SelectedFabric Is Nothing Then Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Require"), "Fabric")
+            If SelectedOptiFine Is Nothing Then Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Require"), "OptiFine")
+            Return PCL.Core.App.I18nService.Get("Download.VersionList.Fetching")
         End If
         For Each version In DlOptiFabricLoader.Output
             If Not IsOptiFabricCompatible(version) Then Continue For '2135#
-            If SelectedFabric Is Nothing AndAlso SelectedOptiFine Is Nothing Then Return "需要安装 OptiFine 与 Fabric"
-            If SelectedFabric Is Nothing Then Return "需要安装 Fabric"
-            If SelectedOptiFine Is Nothing Then Return "需要安装 OptiFine"
+            If SelectedFabric Is Nothing AndAlso SelectedOptiFine Is Nothing Then Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Require2"), "OptiFine", "Fabric")
+            If SelectedFabric Is Nothing Then Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Require"), "Fabric")
+            If SelectedOptiFine Is Nothing Then Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Require"), "OptiFine")
             Return Nothing '通过检查
         Next
-        Return "无可用版本"
+        Return PCL.Core.App.I18nService.Get("Download.VersionList.NoVersion")
     End Function
 
     '限制展开
@@ -1813,15 +1814,15 @@ Public Class PageDownloadInstall
         If LoadLabyMod.State.LoadingState = MyLoading.MyLoadingState.Error Then Return PCL.Core.App.I18nService.Get("Download.VersionList.Failed") & CType(LoadLabyMod.State, Object).Error.Message
         '检查 Loader
         If GetLoaderError(LoadLabyMod) IsNot Nothing Then Return GetLoaderError(LoadLabyMod)
-        If SelectedOptiFine IsNot Nothing Then Return "与 OptiFine 不兼容"
-        If SelectedLoaderName IsNot Nothing AndAlso SelectedLoaderName IsNot "LabyMod" Then Return $"与 {SelectedLoaderName} 不兼容"
+        If SelectedOptiFine IsNot Nothing Then Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Incompatible"), "OptiFine")
+        If SelectedLoaderName IsNot Nothing AndAlso SelectedLoaderName IsNot "LabyMod" Then Return String.Format(PCL.Core.App.I18nService.Get("Download.VersionList.Incompatible"), SelectedLoaderName)
         For Each Version As JObject In DlLabyModListLoader.Output.Value("production")("minecraftVersions")
             If Version("version").ToString = _vanillaName Then Return Nothing
         Next
         For Each Version As JObject In DlLabyModListLoader.Output.Value("snapshot")("minecraftVersions")
             If Version("version").ToString = _vanillaName Then Return Nothing
         Next
-        Return "无可用版本"
+        Return PCL.Core.App.I18nService.Get("Download.VersionList.NoVersion")
     End Function
 
     '限制展开
@@ -1876,7 +1877,8 @@ Public Class PageDownloadInstall
     Public Sub LabyMod_Selected(sender As MyListItem, e As EventArgs)
         SelectedLabyModChannel = sender.Tag("channel").ToString
         SelectedLabyModCommitRef = sender.Tag("commitReference").ToString
-        SelectedLabyModVersion = sender.Tag("version").ToString & If(SelectedLabyModChannel = "snapshot", " 快照版", " 稳定版")
+        SelectedLabyModRawVersion = sender.Tag("version").ToString
+        SelectedLabyModVersion = SelectedLabyModRawVersion & If(SelectedLabyModChannel = "snapshot", PCL.Core.App.I18nService.Get("Download.Install.LabyMod.Channel.Snapshot"), PCL.Core.App.I18nService.Get("Download.Install.LabyMod.Channel.Stable"))
         SelectedLoaderName = "LabyMod"
         CardLabyMod.IsSwapped = True
         ReloadSelected()
@@ -1902,9 +1904,7 @@ Public Class PageDownloadInstall
         '确认版本隔离
         If SelectedLoaderName IsNot Nothing AndAlso
            (Setup.Get("LaunchArgumentIndieV2") = 0 OrElse Setup.Get("LaunchArgumentIndieV2") = 2) Then
-            If MyMsgBox("你尚未开启版本隔离，多个 MC 实例会共用同一个 Mod 文件夹。" & vbCrLf &
-                        "因此，游戏可能会因为读取到与当前实例不符的 Mod 而崩溃。" & vbCrLf &
-                        "推荐先在 设置 → 启动选项 → 默认版本隔离 中开启版本隔离！", "版本隔离提示", "取消下载", "继续") = 1 Then
+            If MyMsgBox(PCL.Core.App.I18nService.Get("Download.Install.Hint.IndieBroken.Content"), PCL.Core.App.I18nService.Get("Download.Install.Hint.IndieBroken.Title"), PCL.Core.App.I18nService.Get("Download.Install.Action.Cancel"), PCL.Core.App.I18nService.Get("Download.Install.Action.Continue")) = 1 Then
                 Return
             End If
         End If
