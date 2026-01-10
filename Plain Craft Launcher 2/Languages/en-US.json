@@ -627,7 +627,7 @@
     "Download.VersionList.AllVersions": "All Versions ({0})",
     "Download.VersionList.ViewAll": "View all versions",
     "Download.VersionList.Type.Official": "Official",
-    "Download.VersionList.Type.NoForge": "Forge Incompatible",
-    "Download.VersionList.Type.CompatibleForge": "Forge {0} Compatible",
+    "Download.VersionList.Type.NoForge": "Incompatible with Forge",
+    "Download.VersionList.Type.CompatibleForge": "Compatible with Forge {0}",
     "Download.VersionList.ViewAllVersions": "View All Versions"
 }
