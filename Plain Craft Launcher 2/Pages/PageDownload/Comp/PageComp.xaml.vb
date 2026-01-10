@@ -179,7 +179,7 @@ Public Class PageComp
     
     Private Function LoaderInput() As CompProjectRequest
         Dim Request As New CompProjectRequest(PageType, Storage, (Page + 1) * PageSize)
-        Dim GameVersion As String = If(TextSearchVersion.Text = "全部 (也可自行输入)", Nothing,
+        Dim GameVersion As String = If(TextSearchVersion.Text = PCL.Core.App.I18nService.Get("Download.Comp.Filter.Version.Any"), Nothing,
                 If(TextSearchVersion.Text.Contains(".") OrElse TextSearchVersion.Text.Contains("w"), TextSearchVersion.Text, Nothing))
         Dim ModLoader As CompLoaderType = CompLoaderType.Any
         If PageType = CompType.Mod OrElse PageType = CompType.ModPack Then '只有 Mod 考虑加载器
@@ -304,7 +304,7 @@ Public Class PageComp
     '重置按钮
     Private Sub ResetFilter() Handles BtnSearchReset.Click
         PanSearchBox.Text = ""
-        TextSearchVersion.Text = "全部 (也可自行输入)"
+        TextSearchVersion.Text = PCL.Core.App.I18nService.Get("Download.Comp.Filter.Version.Any")
         TextSearchVersion.SelectedIndex = 0
         ComboSearchSource.SelectedIndex = 0
         ComboSearchTag.SelectedIndex = 0

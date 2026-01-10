@@ -14,6 +14,10 @@
                             <ColumnDefinition Width="Auto" SharedSizeGroup="Name" />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="28" />
+                            <RowDefinition Height="7" />
+                        </Grid.RowDefinitions>
                         <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{local:Translate Language}" Margin="0,0,25,0" />
                         <local:MyComboBox x:Name="ComboLanguage" Grid.Column="1" SelectionChanged="ComboLanguage_SelectionChanged">
                             <local:MyComboBoxItem Content="{local:Translate SetupSystem.Language.Chinese}" Tag="zh-CN" />
