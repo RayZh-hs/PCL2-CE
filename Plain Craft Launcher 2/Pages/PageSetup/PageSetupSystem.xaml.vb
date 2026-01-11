@@ -25,12 +25,23 @@ Class PageSetupSystem
     Public Sub Reload()
 
         '语言
+        Dim languageSelected As Boolean = False
         For Each item As MyComboBoxItem In ComboLanguage.Items
-            If item.Tag.ToString() = Config.Language Then
+            If item.Tag.ToString().Equals(Config.Language, StringComparison.OrdinalIgnoreCase) Then
                 ComboLanguage.SelectedItem = item
+                languageSelected = True
                 Exit For
             End If
         Next
+        If Not languageSelected AndAlso ComboLanguage.Items.Count > 0 Then
+             ' Fallback to first item or based on current I18n language
+             For Each item As MyComboBoxItem In ComboLanguage.Items
+                If item.Tag.ToString().Equals(I18nService.CurrentLanguage, StringComparison.OrdinalIgnoreCase) Then
+                    ComboLanguage.SelectedItem = item
+                    Exit For
+                End If
+            Next
+        End If
 
         '下载
         SliderDownloadThread.Value = Setup.Get("ToolDownloadThread")

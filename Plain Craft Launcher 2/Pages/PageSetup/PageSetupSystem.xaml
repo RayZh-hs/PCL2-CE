@@ -11,7 +11,7 @@
                 <StackPanel Margin="25,40,25,15">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="Name" />
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="GeneralName" />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>

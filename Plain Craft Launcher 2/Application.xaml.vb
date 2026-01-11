@@ -238,7 +238,7 @@ WaitRetry:
 
     Private Sub ShowLanguageSelection()
         ' Wait for window to be visible
-        If FrmMain Is Nothing OrElse FrmMain.PanMsg Is Nothing OrElse FrmMain.Opacity <= 0 Then
+        If FrmMain Is Nothing OrElse FrmMain.PanMsg Is Nothing OrElse Not FrmMain.IsLoaded Then
             Dim timer As New DispatcherTimer()
             timer.Interval = TimeSpan.FromMilliseconds(100)
             AddHandler timer.Tick, Sub(s, e)

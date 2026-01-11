@@ -45,7 +45,7 @@
     "Download.Comp.FetchingList": "Fetching {0} list",
     "Download.Comp.File.DownloadCount": "{0} Downloads",
     "Download.Comp.File.GameVersions": "Game Versions: {0}",
-    "Download.Comp.File.ReleaseDateDelta": "Updated {0} ago",
+    "Download.Comp.File.ReleaseDateDelta": "Updated {0}",
     "Download.Comp.Filter.Loader": "Loader",
     "Download.Comp.Filter.Loader.Any": "Any",
     "Download.Comp.Filter.Loader.AnyLoader": "Any loader",

@@ -45,7 +45,7 @@
     "Download.Comp.FetchingList": "正在获取{0}列表",
     "Download.Comp.File.DownloadCount": "下载 {0} 次",
     "Download.Comp.File.GameVersions": "游戏版本：{0}",
-    "Download.Comp.File.ReleaseDateDelta": "更新于{0}前",
+    "Download.Comp.File.ReleaseDateDelta": "更新于 {0}",
     "Download.Comp.Filter.Loader": "加载器",
     "Download.Comp.Filter.Loader.Any": "任意",
     "Download.Comp.Filter.Loader.AnyLoader": "任意加载器",
